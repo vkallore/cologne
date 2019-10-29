@@ -2,7 +2,8 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import * as dotenv from 'dotenv'
 
-import { findUser, signToken, verifyToken } from './auth'
+import { findUserByEmailAndPassword, signToken, verifyToken } from './auth'
+import { findShipments } from './shipments'
 
 dotenv.config()
 
@@ -39,15 +40,27 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-app.get('/shipment', (req, res) => {
-  const name = req.query.name || 'World'
-  res.json({ greeting: `Hello ${name}!` })
+/**
+ * Get shipments accessible by the user
+ */
+app.get('/shipments', async (req, res) => {
+  // Find user from token
+  const token = req.headers.token
+  const userData = verifyToken(token, true, res)
+
+  const userShipments = await findShipments(userData)
+
+  res.status(200)
+  res.send(userShipments)
 })
 
+/**
+ * Login request
+ */
 app.post('/login', async (req, res) => {
   const { email, password } = req.body
 
-  const user = await findUser(email, password)
+  const user = await findUserByEmailAndPassword(email, password)
 
   // Login failed
   if (!user) {
@@ -62,7 +75,7 @@ app.post('/login', async (req, res) => {
 })
 
 /**
- * Verify user
+ * Verify user token
  */
 app.post('/token-verify', (req, res) => {
   const tokenVerified = verifyToken(req.body.token || '')
