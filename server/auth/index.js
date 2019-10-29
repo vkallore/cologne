@@ -37,19 +37,17 @@ export const signToken = ({ id, email, type }) => {
 
 /**
  * Verify token and stop execution if required
- * @param {string} token
- * @param {boolean} stopExecution
+ * @param {object} req
  * @param {object} res
  */
-export const verifyToken = (token, stopExecution = false, res) => {
+export const verifyToken = (req, res) => {
   try {
+    const token = req.headers.token || ''
     const jwtData = jwt.verify(token, process.env.JWT_SECRET)
     return jwtData
   } catch (err) {
-    if (stopExecution) {
-      res.status(401)
-      res.json({ message: 'Session expired or invalid token!' })
-    }
+    res.status(401)
+    res.json({ message: 'Session expired or invalid token!' })
 
     return false
   }

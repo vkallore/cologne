@@ -3,7 +3,7 @@ import bodyParser from 'body-parser'
 import * as dotenv from 'dotenv'
 
 import { findUserByEmailAndPassword, signToken, verifyToken } from './auth'
-import { findShipments } from './shipments'
+import { findShipments, updateShipment } from './shipments'
 
 dotenv.config()
 
@@ -45,13 +45,28 @@ app.use(bodyParser.json())
  */
 app.get('/shipments', async (req, res) => {
   // Find user from token
-  const token = req.headers.token
-  const userData = verifyToken(token, true, res)
+  const userData = verifyToken(req, res)
 
-  const userShipments = await findShipments(userData)
+  if (userData !== false) {
+    const userShipments = await findShipments(userData)
 
-  res.status(200)
-  res.send(userShipments)
+    res.status(200).json(userShipments)
+  }
+})
+
+/**
+ * Update a shipment status
+ */
+app.put('/shipments', async (req, res) => {
+  // Find user from token
+  const userData = verifyToken(req, res)
+
+  if (userData !== false) {
+    const userShipments = await updateShipment(req.body, userData, res)
+    if (userShipments === true) {
+      res.status(200).json({ message: 'Shipment updated successfully' })
+    }
+  }
 })
 
 /**
@@ -78,11 +93,8 @@ app.post('/login', async (req, res) => {
  * Verify user token
  */
 app.post('/token-verify', (req, res) => {
-  const tokenVerified = verifyToken(req.body.token || '')
-  if (!tokenVerified) {
-    res.status(401)
-    res.json({ message: 'Session expired or invalid token' })
-  } else {
+  const tokenVerified = verifyToken(req, res)
+  if (tokenVerified) {
     res.status(200)
     res.send()
   }
@@ -91,9 +103,7 @@ app.post('/token-verify', (req, res) => {
 /* Throw 404 for all other requests */
 app.get('*', (req, res) => {
   res.status(404)
-  res.send(
-    JSON.stringify({ message: 'I do not know what you are looking for!' })
-  )
+  res.json({ message: 'I do not know what you are looking for!' })
 })
 
 app.listen(process.env.PORT, () =>
