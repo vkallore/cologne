@@ -1,4 +1,13 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Project Setup
+
+## .env
+
+```
+PORT=SERVER_PORT
+JWT_SECRET=YOUR_JWT_SECRET
+```
+
+# This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 

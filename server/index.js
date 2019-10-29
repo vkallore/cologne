@@ -2,7 +2,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import * as dotenv from 'dotenv'
 
-import { findUser } from './auth'
+import { findUser, signToken, verifyToken } from './auth'
 
 dotenv.config()
 
@@ -39,12 +39,12 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-app.get('/shipment', function(req, res) {
+app.get('/shipment', (req, res) => {
   const name = req.query.name || 'World'
   res.json({ greeting: `Hello ${name}!` })
 })
 
-app.post('/login', async function(req, res) {
+app.post('/login', async (req, res) => {
   const { email, password } = req.body
 
   const user = await findUser(email, password)
@@ -54,13 +54,29 @@ app.post('/login', async function(req, res) {
     res.status(401)
     res.json({ message: 'Invalid login' })
   } else {
+    user.token = signToken(user)
+
     res.status(200)
-    res.json({ name: user.name, type: user.type })
+    res.json({ name: user.name, type: user.type, token: user.token })
+  }
+})
+
+/**
+ * Verify user
+ */
+app.post('/token-verify', (req, res) => {
+  const tokenVerified = verifyToken(req.body.token || '')
+  if (!tokenVerified) {
+    res.status(401)
+    res.json({ message: 'Session expired or invalid token' })
+  } else {
+    res.status(200)
+    res.send()
   }
 })
 
 /* Throw 404 for all other requests */
-app.get('*', function(req, res) {
+app.get('*', (req, res) => {
   res.status(404)
   res.send(
     JSON.stringify({ message: 'I do not know what you are looking for!' })
