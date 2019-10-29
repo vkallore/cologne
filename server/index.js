@@ -106,6 +106,8 @@ app.get('*', (req, res) => {
   res.json({ message: 'I do not know what you are looking for!' })
 })
 
-app.listen(process.env.PORT, () =>
-  console.log(`Express server is running on localhost: ${process.env.PORT}`)
+app.listen(process.env.SERVER_PORT, () =>
+  console.log(
+    `Express server is running on localhost: ${process.env.SERVER_PORT}`
+  )
 )

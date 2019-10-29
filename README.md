@@ -3,9 +3,12 @@
 ## .env
 
 ```
-PORT=SERVER_PORT
+SERVER_PORT=SERVER_PORT
+PORT=FRONTEND_PORT
 JWT_SECRET=YOUR_JWT_SECRET
 ```
+
+!> Note: If `PORT` is not mentioned, default port will be used.
 
 # This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
