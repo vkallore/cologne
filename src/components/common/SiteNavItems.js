@@ -9,7 +9,11 @@ const SiteNavItems = () => (
     <div className="navbar-end">
       <div className="navbar-item">
         <div className="buttons">
-          <Link className="navbar-item button" to="/login" title={TEXT_LOGIN}>
+          <Link
+            className="navbar-item button is-light"
+            to="/login"
+            title={TEXT_LOGIN}
+          >
             {TEXT_LOGIN}
           </Link>
         </div>

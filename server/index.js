@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import bodyParser from 'body-parser'
 import * as dotenv from 'dotenv'
 
@@ -10,11 +11,11 @@ dotenv.config()
 const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 
+// Allow cors, RISK!
+app.use(cors())
+
 // CORS middleware
 app.use((req, res, next) => {
-  // Allow all, RISK!
-  res.setHeader('Access-Control-Allow-Origin', '*')
-
   // Request methods you wish to allow
   res.setHeader(
     'Access-Control-Allow-Methods',
