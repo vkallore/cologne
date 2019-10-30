@@ -37,6 +37,38 @@ export const findShipments = userData => {
 }
 
 /**
+ * Get shipment details by ID & access level
+ * @param {*} shipmentId
+ * @param {*} userData
+ */
+export const findShipment = async (shipmentId, userData) => {
+  const { type } = userData
+  let { user_id: userId } = userData
+  userId = +userId
+
+  const shipment = await shipments.find(shipment => shipment.id === shipmentId)
+
+  if (shipment === undefined) {
+    return Promise.resolve(null)
+  }
+  /* Manager should get assignee details */
+  if (type === MANAGER) {
+    const userId = shipment.assignee
+    const assignedUserData = await findUserById(userId)
+    if (assignedUserData) {
+      shipment.assignee = {
+        id: assignedUserData.id,
+        name: assignedUserData.name,
+        email: assignedUserData.email
+      }
+    }
+  } else if (shipment.assignee !== userId) {
+    return Promise.resolve(false)
+  }
+  return Promise.resolve(shipment)
+}
+
+/**
  * Update shipment
  * @param {*} reqBody
  * @param {*} userData

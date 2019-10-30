@@ -4,7 +4,7 @@ import bodyParser from 'body-parser'
 import * as dotenv from 'dotenv'
 
 import { findUserByEmailAndPassword, signToken, verifyToken } from './auth'
-import { findShipments, updateShipment } from './shipments'
+import { findShipments, findShipment, updateShipment } from './shipments'
 
 dotenv.config()
 
@@ -52,6 +52,27 @@ app.get('/shipments', async (req, res) => {
     const userShipments = await findShipments(userData)
 
     res.status(200).json(userShipments)
+  }
+})
+
+/**
+ * Get shipments accessible by the user
+ */
+app.get('/shipments/:id', async (req, res) => {
+  // Find user from token
+  const userData = verifyToken(req, res)
+
+  if (userData !== false) {
+    const shipmentId = +req.params.id
+    const shipment = await findShipment(shipmentId, userData)
+    if (shipment !== false && shipment !== null) {
+      return res.status(200).json(shipment)
+    } else if (shipment === null) {
+      return res.status(404).json({ message: 'Shipment not found' })
+    }
+    res
+      .status(403)
+      .json({ message: 'You do not have access to this shipment!' })
   }
 })
 
