@@ -6,6 +6,7 @@ export const SET_AJAX_PROCESSING = 'SET_AJAX_PROCESSING'
 export const RESET_FORM = 'RESET_FORM'
 export const CHANGE_FORM = 'CHANGE_FORM'
 export const SET_LOGGED_IN = 'SET_LOGGED_IN'
+export const USER_TYPE_MANAGER = 'MANAGER'
 export const USER_IS_MANAGER = 'USER_IS_MANAGER'
 
 /* Header/Localstorage */

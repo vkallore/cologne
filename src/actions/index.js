@@ -10,7 +10,8 @@ import {
   DANGER,
   WARNING,
   RESET_FORM,
-  USER_IS_MANAGER
+  USER_IS_MANAGER,
+  USER_TYPE_MANAGER
 } from 'constants/AppConstants'
 import {
   API_ERROR_404,
@@ -141,10 +142,10 @@ export const setAjaxProcessing = ajaxProcessing => {
  * &
  * Set logged in as admin or not
  * @param {boolean} loggedIn
- * @param {boolean} isAdmin
+ * @param {boolean} isManager
  */
-export const setLoggedIn = (loggedIn, isAdmin) => {
-  return { type: SET_LOGGED_IN, loggedIn, isAdmin }
+export const setLoggedIn = (loggedIn, isManager) => {
+  return { type: SET_LOGGED_IN, loggedIn, isManager }
 }
 
 /**
@@ -155,7 +156,7 @@ export const setUserData = ({ ...loginData }) => {
   const { token } = loginData
 
   setLocalStorage(USER_API_KEY, token)
-  setLocalStorage(USER_IS_MANAGER, loginData.type === 'Manager')
+  setLocalStorage(USER_IS_MANAGER, loginData.type === USER_TYPE_MANAGER)
 }
 
 /**
@@ -190,15 +191,15 @@ export const getLocalStorage = key => {
 export const checkAndSetLogin = async (dispatch, setAsLoggedIn = true) => {
   let isLoggedIn = false
   const userApiKey = await getLocalStorage(USER_API_KEY)
-  let userIsAdmin = await getLocalStorage(USER_IS_MANAGER)
+  let userIsManager = await getLocalStorage(USER_IS_MANAGER)
   // String to Boolean
-  userIsAdmin = JSON.parse(userIsAdmin)
+  userIsManager = JSON.parse(userIsManager)
   if (userApiKey) {
     isLoggedIn = true
   }
 
   if (setAsLoggedIn === true) {
-    dispatch(setLoggedIn(isLoggedIn, userIsAdmin))
+    dispatch(setLoggedIn(isLoggedIn, userIsManager))
   }
   return isLoggedIn
 }

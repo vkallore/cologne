@@ -25,9 +25,9 @@ class Login extends React.Component {
   }
 
   render() {
-    const { loggedIn, loggedInAdmin } = this.props
+    const { loggedIn, loggedInManager } = this.props
     if (loggedIn) {
-      return <Redirect to={getLoginRedirect(loggedIn, loggedInAdmin)} />
+      return <Redirect to={getLoginRedirect(loggedIn, loggedInManager)} />
     }
     const { ajaxProcessing, formFields } = this.props
     return (
@@ -53,12 +53,9 @@ class Login extends React.Component {
 
 const mapStateToProps = state => ({
   loggedIn: state.common.loggedIn,
-  loggedInAdmin: state.common.loggedInAdmin,
+  loggedInManager: state.common.loggedInManager,
   ajaxProcessing: state.common.ajaxProcessing,
-  formFields: state.forms.login,
-  apiResponse: state.common.apiResponse,
-  apiResponseType: state.common.apiResponseType,
-  allowMessageClear: state.common.allowMessageClear
+  formFields: state.forms.login
 })
 
 export default withRouter(
