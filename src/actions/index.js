@@ -4,11 +4,12 @@ import {
   SET_AJAX_PROCESSING,
   CHANGE_FORM,
   USER_API_KEY,
-  USER_IS_ADMIN,
   SET_LOGGED_IN,
   SHOW_MESSAGE,
   CSS_CLASS_DANGER,
-  CLEAR_MESSAGE
+  CLEAR_MESSAGE,
+  RESET_FORM,
+  USER_IS_MANAGER
 } from 'constants/AppConstants'
 import {
   API_ERROR_404,
@@ -16,8 +17,6 @@ import {
   LOGGED_IN_ALREADY,
   LOGGED_IN_NOT
 } from 'constants/AppMessage'
-
-const perPage = process.env.PER_PAGE || 10
 
 /**
  * Common error hander for API calls
@@ -179,10 +178,10 @@ export const setLoggedIn = (loggedIn, isAdmin) => {
  * @param  {...any} loginData
  */
 export const setUserData = ({ ...loginData }) => {
-  const { api_key, is_admin } = loginData
+  const { token } = loginData
 
-  setLocalStorage(USER_API_KEY, api_key)
-  setLocalStorage(USER_IS_ADMIN, is_admin)
+  setLocalStorage(USER_API_KEY, token)
+  setLocalStorage(USER_IS_MANAGER, loginData.type === 'Manager')
 }
 
 /**
@@ -217,7 +216,7 @@ export const getLocalStorage = key => {
 export const checkAndSetLogin = async (dispatch, setAsLoggedIn = true) => {
   let isLoggedIn = false
   const userApiKey = await getLocalStorage(USER_API_KEY)
-  let userIsAdmin = await getLocalStorage(USER_IS_ADMIN)
+  let userIsAdmin = await getLocalStorage(USER_IS_MANAGER)
   // String to Boolean
   userIsAdmin = JSON.parse(userIsAdmin)
   if (userApiKey) {
@@ -256,4 +255,12 @@ export const checkLoggedInStatus = async (
   errorHandler(dispatch, message, true)
   dispatch(setAjaxProcessing(false))
   return false
+}
+
+/**
+ * Reset the form
+ * @param {string} form Form Type
+ */
+export const resetForm = form => {
+  return { type: RESET_FORM, formType: form }
 }

@@ -16,7 +16,7 @@ const ProtectedRoute = ({
   const { loggedIn } = props
   if (loggedIn) {
     return (
-      <PublicLayout>
+      <ProtectedLayout>
         <Suspense fallback={<ContentLoader />}>
           {!lazyLoad ? (
             <Route {...props} component={Component} />
@@ -24,7 +24,7 @@ const ProtectedRoute = ({
             <Route {...props} render={() => <Component />} />
           )}
         </Suspense>
-      </PublicLayout>
+      </ProtectedLayout>
     )
   } else {
     return (

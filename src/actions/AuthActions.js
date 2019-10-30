@@ -2,10 +2,13 @@ import {
   errorHandler,
   clearMessage,
   setUserData,
+  resetForm,
   setAjaxProcessing,
   checkLoggedInStatus,
   setLoggedIn
 } from 'actions'
+import { FORM_LOGIN } from 'constants/AppForms'
+
 import { doLogin } from 'services/auth'
 
 /**
@@ -27,13 +30,14 @@ export const login = ({ username, password }) => {
         return []
       }
 
-      const { data: userData } = await doLogin({ username, password })
+      const userData = await doLogin({ username, password })
 
-      const { api_key, is_admin } = userData
-      if (api_key) {
+      const { token } = userData
+      if (token) {
         setUserData(userData)
 
-        dispatch(setLoggedIn(true, is_admin))
+        dispatch(resetForm(FORM_LOGIN))
+        dispatch(setLoggedIn(true, userData))
         dispatch(setAjaxProcessing(false))
       }
       return userData
