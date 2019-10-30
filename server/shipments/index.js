@@ -7,15 +7,23 @@ import { findUserById } from '../auth/index'
  * @param {*} userData
  */
 export const findShipments = userData => {
-  const { type, user_id: userId } = userData
+  const { type } = userData
+  let { user_id: userId } = userData
+  userId = +userId
   /* Manager should get all shipments */
   if (type === MANAGER) {
     return Promise.all(
       shipments.map(async shipment => {
         const userId = shipment.assignee
         if (userId !== null) {
-          const userData = await findUserById(userId)
-          shipment.assignee = userData
+          const assignedUserData = await findUserById(userId)
+          if (assignedUserData) {
+            shipment.assignee = {
+              id: assignedUserData.id,
+              name: assignedUserData.name,
+              email: assignedUserData.email
+            }
+          }
         }
         return shipment
       })
@@ -34,9 +42,10 @@ export const findShipments = userData => {
  * @param {*} userData
  */
 export const updateShipment = async (reqBody, userData, res) => {
-  const { assignee, status } = reqBody
-  let { shipment_id: shipmentId } = reqBody
+  const { status } = reqBody
+  let { shipment_id: shipmentId, assignee } = reqBody
   shipmentId = +shipmentId
+  assignee = +assignee
   const { type, user_id: userId } = userData
   let shipmentIndex
 
@@ -57,7 +66,8 @@ export const updateShipment = async (reqBody, userData, res) => {
     /* Manager can update any shipment */
     if (type === MANAGER) {
       shipment.status = status
-      shipment.assignee = assignee
+      shipment.assignee = assignee !== 0 ? assignee : null
+      shipment.last_update = new Date()
 
       shipments[shipmentIndex] = shipment
       return Promise.resolve(true)
@@ -65,6 +75,8 @@ export const updateShipment = async (reqBody, userData, res) => {
 
     if (shipment.assignee === userId) {
       shipment.status = status
+      shipment.last_update = new Date()
+
       shipments[shipmentIndex] = shipment
     } else {
       res

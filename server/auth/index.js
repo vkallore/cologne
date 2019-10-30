@@ -20,9 +20,9 @@ export const findUserByEmailAndPassword = (email, password) =>
  * @param {string} email
  * @param {string} password
  */
-export const findUserById = userId =>
-  new Promise(resolve => resolve(users.find(user => user.id === userId)))
-
+export const findUserById = userId => {
+  return new Promise(resolve => resolve(users.find(user => user.id === userId)))
+}
 /**
  * Sign the JWT
  * @param {object} user object
