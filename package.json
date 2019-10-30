@@ -5,11 +5,23 @@
     "node": "10.15.1"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.22",
+    "@fortawesome/free-brands-svg-icons": "^5.10.2",
+    "@fortawesome/free-solid-svg-icons": "^5.10.2",
+    "@fortawesome/react-fontawesome": "^0.1.4",
+    "axios": "^0.19.0",
+    "bulma": "^0.7.5",
     "dotenv": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
+    "qs": "^6.8.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
-    "react-scripts": "3.2.0"
+    "react-helmet": "^5.2.1",
+    "react-redux": "^7.1.1",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.2.0",
+    "redux": "^4.0.4",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "npm-run-all -p server frontend",
@@ -42,6 +54,7 @@
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "nodemon": "^1.19.4",
+    "node-sass": "^4.12.0",
     "npm-run-all": "^4.1.5"
   }
 }

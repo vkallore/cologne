@@ -9,12 +9,13 @@ SERVER_PORT=SERVER_PORT
 PORT=FRONTEND_PORT
 JWT_SECRET=YOUR_JWT_SECRET
 REACT_APP_NODE_PATH=src/
+REACT_APP_API_URL=API_URL
 ```
 
 ### Note
 
-* If `PORT` is not mentioned, default port will be used.
-* The `REACT_APP_NODE_PATH` helps to include components with absolute path.
+- If `PORT` is not mentioned, default port will be used.
+- The `REACT_APP_NODE_PATH` helps to include components with absolute path.
 
 ## Run the app
 

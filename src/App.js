@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component, Suspense } from 'react'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import CommonModal from 'containers/common/CommonModal'
+
+import Routes from 'routes'
+
+import { APP_NAME } from 'constants/AppLanguage'
+
+class App extends Component {
+  render() {
+    return (
+      <React.Fragment>
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>{APP_NAME}</title>
+        </Helmet>
+        <Router>
+          <Routes />
+        </Router>
+        <Suspense fallback={null}>
+          <CommonModal />
+        </Suspense>
+      </React.Fragment>
+    )
+  }
 }
 
-export default App;
+export default App

@@ -1,0 +1,65 @@
+.columns {
+  margin: 0;
+}
+.control .icon.is-clickable {
+  cursor: pointer;
+  pointer-events: all;
+}
+
+@media screen and (min-width: 768px) {
+  .columns {
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+    margin-top: -0.75rem;
+  }
+}
+/* Page Loader/Ajax Processing */
+.ajaxloader {
+  -webkit-transform: translateX(100%);
+  transform: translateX(100%);
+
+  position: fixed;
+  bottom: 3em;
+  right: 3em;
+  padding-top: 2em;
+  z-index: 999998;
+  transition: transform 0.35s ease-out, -webkit-transform 0.35s ease-out;
+  will-change: transform;
+  &.is-active {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
+/* Table */
+/* Responsive */
+.table__wrapper {
+  overflow-x: auto;
+}
+.responsive-table {
+  width: 100%;
+}
+/* EO Responsive */
+.has-text-centered > th,
+.has-text-centered > td {
+  text-align: center !important;
+}
+.is-vertical-center,
+.is-vertical-center > th {
+  vertical-align: middle !important;
+}
+/* Table */
+
+/* Fixed Alert Box */
+.fixed-notification {
+  position: fixed !important;
+  bottom: 1rem;
+  right: 1rem;
+  min-width: 25rem;
+}
+@media screen and (max-width: 768px) {
+  .fixed-notification {
+    left: 1rem;
+  }
+}
+/* EO Alert Box */
