@@ -10,8 +10,6 @@ import LoginForm from 'components/auth/LoginForm'
 import { FORM_LOGIN } from 'constants/AppForms'
 import { TITLE_LOGIN, TEXT_LOGIN } from 'constants/AppLanguage'
 
-import { clearMessage } from 'actions'
-
 import { getLoginRedirect } from 'helpers'
 
 // const AlertBox = React.lazy(() => import('components/common/AlertBox'))
@@ -21,7 +19,7 @@ class Login extends React.Component {
     const { login } = this.props
 
     await login({
-      username: formFields.username,
+      email: formFields.email,
       password: formFields.password
     })
   }
@@ -31,15 +29,7 @@ class Login extends React.Component {
     if (loggedIn) {
       return <Redirect to={getLoginRedirect(loggedIn, loggedInAdmin)} />
     }
-    const {
-      ajaxProcessing,
-      formFields,
-      apiResponse,
-      apiResponseType,
-      allowMessageClear,
-      clearMessage,
-      loginSocial
-    } = this.props
+    const { ajaxProcessing, formFields } = this.props
     return (
       <React.Fragment>
         <Helmet>
@@ -56,12 +46,6 @@ class Login extends React.Component {
             />
           </div>
         </div>
-        {/* <AlertBox
-          alertText={apiResponse}
-          alertType={apiResponseType}
-          allowMessageClear={allowMessageClear}
-          clearMessage={clearMessage}
-        /> */}
       </React.Fragment>
     )
   }
@@ -80,6 +64,6 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(
     mapStateToProps,
-    { login, clearMessage }
+    { login }
   )(Login)
 )

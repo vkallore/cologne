@@ -33,7 +33,7 @@ const LoginForm = props => {
         <p className="control has-icons-left">
           <Input
             type="text"
-            name="username"
+            name="email"
             placeholder={FIELD_EMAIL}
             formModel={formModel}
             required={true}

@@ -3,7 +3,7 @@ import { FORM_LOGIN } from 'constants/AppForms'
 
 const initialState = {
   login: {
-    username: '',
+    email: '',
     password: ''
   }
 }

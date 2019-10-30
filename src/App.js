@@ -1,8 +1,6 @@
-import React, { Component, Suspense } from 'react'
+import React, { Component } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
-
-import CommonModal from 'containers/common/CommonModal'
 
 import Routes from 'routes'
 
@@ -19,9 +17,6 @@ class App extends Component {
         <Router>
           <Routes />
         </Router>
-        <Suspense fallback={null}>
-          <CommonModal />
-        </Suspense>
       </React.Fragment>
     )
   }

@@ -12,8 +12,7 @@ export const USER_IS_MANAGER = 'USER_IS_MANAGER'
 export const USER_API_KEY = 'token'
 
 /* HTML/CSS related constants */
-export const CSS_CLASS_SUCCESS = 'success'
-export const CSS_CLASS_DANGER = 'danger'
-export const CSS_CLASS_INFO = 'info'
-export const CSS_CLASS_WARNING = 'warning'
-export const CSS_CLASS_DEFAILT = 'defailt'
+export const SUCCESS = 'success'
+export const DANGER = 'danger'
+export const INFO = 'info'
+export const WARNING = 'warning'

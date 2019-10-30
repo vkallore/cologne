@@ -1,13 +1,14 @@
+import { toastr } from 'react-redux-toastr'
+
 import {
-  SHOW_MODAL,
-  HIDE_MODAL,
   SET_AJAX_PROCESSING,
   CHANGE_FORM,
   USER_API_KEY,
   SET_LOGGED_IN,
-  SHOW_MESSAGE,
-  CSS_CLASS_DANGER,
-  CLEAR_MESSAGE,
+  SUCCESS,
+  INFO,
+  DANGER,
+  WARNING,
   RESET_FORM,
   USER_IS_MANAGER
 } from 'constants/AppConstants'
@@ -66,33 +67,37 @@ export const errorHandler = (dispatch, error, allowMessageClose = false) => {
     message = API_COMMON_ERROR
   }
 
-  dispatchMessage(
-    dispatch,
-    message,
-    detailedMessage,
-    CSS_CLASS_DANGER,
-    allowMessageClose
-  )
+  showMessage(message, detailedMessage, DANGER, allowMessageClose)
 }
 
 /**
  * Dispatch message
  * @param {*} dispatch
- * @param {*} message
+ * @param {string} message
+ * @param {string} detailedMessage
+ * @param {string} messageType
+ * @param {boolean} allowMessageClose
  */
-export const dispatchMessage = async (
-  dispatch,
+export const showMessage = async (
   message,
   detailedMessage,
   messageType,
   allowMessageClose = false
 ) => {
   message += await buildDetailedMessage(detailedMessage)
-  dispatch({
-    type: SHOW_MESSAGE,
-    apiResponse: message,
-    apiResponseType: messageType,
-    allowMessageClear: allowMessageClose
+  let toasterFunc = 'error'
+  switch (messageType) {
+    case SUCCESS:
+    case INFO:
+    case WARNING:
+      toasterFunc = messageType
+      break
+    default:
+      break
+  }
+
+  toastr[toasterFunc](message, {
+    showCloseButton: allowMessageClose
   })
 }
 
@@ -113,37 +118,6 @@ export const buildDetailedMessage = detailedMessage =>
     } catch (err) {}
     resolve(strDetailedMessage)
   })
-
-/**
- * Clear the message shown
- */
-export const clearMessage = () => {
-  return dispatch => {
-    dispatch({
-      type: CLEAR_MESSAGE
-    })
-  }
-}
-
-/**
- * Show the modal
- * @param {*} modalActions
- */
-export const showModal = modalActions => {
-  return dispatch => {
-    dispatch({ type: SHOW_MODAL, modalActions })
-  }
-}
-
-/**
- * Close the modal
- * @param {*} modalActions
- */
-export const closeModal = modalActions => {
-  return dispatch => {
-    dispatch({ type: HIDE_MODAL, modalActions })
-  }
-}
 
 /**
  * Handle change in login/register forms

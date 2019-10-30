@@ -1,6 +1,5 @@
 import {
   errorHandler,
-  clearMessage,
   setUserData,
   resetForm,
   setAjaxProcessing,
@@ -13,15 +12,13 @@ import { doLogin } from 'services/auth'
 
 /**
  * Login form
- * @param {string} username
+ * @param {string} email
  * @param {string} password
  */
-export const login = ({ username, password }) => {
+export const login = ({ email, password }) => {
   return async dispatch => {
     dispatch(setAjaxProcessing(true))
     try {
-      dispatch(clearMessage())
-
       /**
        * Check whether user is already logged in or not
        */
@@ -30,7 +27,7 @@ export const login = ({ username, password }) => {
         return []
       }
 
-      const userData = await doLogin({ username, password })
+      const { data: userData } = await doLogin({ email, password })
 
       const { token } = userData
       if (token) {
