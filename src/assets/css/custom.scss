@@ -1,3 +1,5 @@
+$md-width: 768px;
+
 .columns {
   margin: 0;
 }
@@ -6,7 +8,7 @@
   pointer-events: all;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: $md-width) {
   .columns {
     margin-left: -0.75rem;
     margin-right: -0.75rem;
@@ -57,7 +59,7 @@
   right: 1rem;
   min-width: 25rem;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $md-width) {
   .fixed-notification {
     left: 1rem;
   }
@@ -69,5 +71,12 @@
     h1.title {
       margin-top: 1em;
     }
+  }
+}
+
+.btn-assign {
+  &:hover {
+    background-color: #dbdbdb;
+    transition-duration: 0.5s;
   }
 }

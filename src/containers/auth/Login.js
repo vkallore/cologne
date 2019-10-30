@@ -25,9 +25,9 @@ class Login extends React.Component {
   }
 
   render() {
-    const { loggedIn, loggedInManager } = this.props
+    const { loggedIn } = this.props
     if (loggedIn) {
-      return <Redirect to={getLoginRedirect(loggedIn, loggedInManager)} />
+      return <Redirect to={getLoginRedirect(loggedIn)} />
     }
     const { ajaxProcessing, formFields } = this.props
     return (

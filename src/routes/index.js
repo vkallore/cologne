@@ -12,7 +12,10 @@ const PageNotFound = React.lazy(() => import('components/pages/PageNotFound'))
 
 const Login = React.lazy(() => import('containers/auth/Login'))
 
-const Dashboard = React.lazy(() => import('containers/dashboard/Dashboard'))
+const Shipments = React.lazy(() => import('containers/dashboard/Shipments'))
+const ShipmentDetails = React.lazy(() =>
+  import('containers/dashboard/ShipmentDetails')
+)
 
 const Logout = React.lazy(() => import('containers/auth/Logout'))
 
@@ -24,7 +27,17 @@ class Routes extends React.Component {
           <PublicRoute exact={true} path="/" component={Home} />
           <PublicRoute path="/login" component={Login} />
 
-          <ProtectedRoute path="/dashboard" component={Dashboard} />
+          <ProtectedRoute
+            path="/shipments"
+            exact={true}
+            component={Shipments}
+          />
+          <ProtectedRoute
+            path="/shipments/:id"
+            exact={true}
+            lazyLoad={false}
+            component={ShipmentDetails}
+          />
 
           <ProtectedRoute path="/logout" component={Logout} />
 

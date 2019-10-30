@@ -11,7 +11,6 @@ import * as serviceWorker from 'serviceWorker'
 
 import 'react-redux-toastr/src/styles/index.scss'
 import 'bulma/css/bulma.css'
-import 'assets/css/bulmaswatch.css'
 import 'assets/css/custom.scss'
 import { checkAndSetLogin } from 'actions'
 

@@ -1,7 +1,10 @@
 export const APP_NAME = 'Cologne'
 export const APP_TITLE = `Welcome to ${APP_NAME}`
-export const TEXT_DASHBOARD = 'Dashboard'
-export const TITLE_DASHBOARD = `${TEXT_DASHBOARD} - ${APP_NAME}`
+export const TEXT_SHIPMENT = 'Shipments'
+export const TITLE_SHIPMENT = `${TEXT_SHIPMENT} - ${APP_NAME}`
 export const TEXT_LOGIN = 'Login'
 export const TITLE_LOGIN = `${TEXT_LOGIN} - ${APP_NAME}`
 export const TEXT_LOGOUT = 'Logout'
+export const TEXT_ASSIGN = 'Assign'
+export const TEXT_SHIPMENT_DETAILS = 'Shipment Details'
+export const TITLE_SHIPMENT_DETAILS = `${TEXT_SHIPMENT_DETAILS} - ${APP_NAME}`

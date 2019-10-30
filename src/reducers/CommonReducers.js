@@ -5,7 +5,6 @@ import {
   CLEAR_MESSAGE,
   CHANGE_FORM
 } from 'constants/AppConstants'
-import { USER_TYPE_MANAGER } from '../constants/AppConstants'
 
 const initialState = {
   ajaxProcessing: false,

@@ -8,7 +8,7 @@ import { USER_API_KEY } from 'constants/AppConstants'
  * API Base URL - Proxy!
  */
 const baseURL = `${process.env.REACT_APP_API_URL}`
-
+console.log(getLocalStorage(USER_API_KEY))
 /**
  * Axios services
  */

@@ -18,6 +18,9 @@ export const toISOString = ({ date, time, strDateTime }) => {
  * @param {*} isoString Time in ISO format
  */
 export const toLocaleString = isoString => {
+  if (isoString === undefined || isoString === null || isoString === '') {
+    return null
+  }
   return new Date(isoString).toLocaleString()
 }
 
@@ -32,10 +35,7 @@ export const toHours = minutes => {
 /**
  * Get the redirect URL
  * @param {boolean} loggedIn
- * @param {boolean} loggedInAsAdmin
  */
-export const getLoginRedirect = (loggedIn, loggedInAsAdmin) => {
-  if (!loggedIn) return '/'
-  if (loggedInAsAdmin === true) return '/admin'
-  return '/dashboard'
+export const getLoginRedirect = loggedIn => {
+  return !loggedIn ? '/' : '/shipments'
 }
