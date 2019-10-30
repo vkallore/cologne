@@ -1,4 +1,4 @@
-import users from './users'
+import users, { BIKER } from './users'
 import jwt from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
 dotenv.config()
@@ -51,4 +51,13 @@ export const verifyToken = (req, res) => {
 
     return false
   }
+}
+
+/**
+ * Find all bikers and return
+ * @param {object} req
+ * @param {object} res
+ */
+export const findBikers = () => {
+  return Promise.resolve(users.filter(user => user.type === BIKER))
 }

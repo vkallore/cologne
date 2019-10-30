@@ -3,8 +3,14 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import * as dotenv from 'dotenv'
 
-import { findUserByEmailAndPassword, signToken, verifyToken } from './auth'
+import {
+  findUserByEmailAndPassword,
+  signToken,
+  verifyToken,
+  findBikers
+} from './auth'
 import { findShipments, findShipment, updateShipment } from './shipments'
+import { MANAGER } from './auth/users'
 
 dotenv.config()
 
@@ -50,8 +56,9 @@ app.get('/shipments', async (req, res) => {
 
   if (userData !== false) {
     const userShipments = await findShipments(userData)
-
-    res.status(200).json(userShipments)
+    if (userShipments !== false) {
+      res.status(200).json(userShipments)
+    }
   }
 })
 
@@ -119,6 +126,25 @@ app.post('/token-verify', (req, res) => {
   if (tokenVerified) {
     res.status(200)
     res.send()
+  }
+})
+
+/**
+ * Get all bikers
+ */
+app.get('/bikers', async (req, res) => {
+  // Find user from token
+  const userData = verifyToken(req, res)
+
+  if (userData !== false) {
+    if (userData.type !== MANAGER) {
+      return res.status(403).json({ message: 'Unauthorized' })
+    }
+    const bikers = await findBikers(userData)
+
+    if (bikers !== false) {
+      res.status(200).json(bikers)
+    }
   }
 })
 
