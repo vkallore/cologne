@@ -37,7 +37,7 @@ class Login extends React.Component {
         </Helmet>
         <h1 className="title">{TEXT_LOGIN}</h1>
         <div className="columns is-centered">
-          <div className="column is-half">
+          <div className="column is-one-third">
             <LoginForm
               handleSubmit={this.handleSubmit}
               ajaxProcessing={ajaxProcessing}

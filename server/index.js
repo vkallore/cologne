@@ -125,7 +125,9 @@ app.post('/token-verify', (req, res) => {
   const tokenVerified = verifyToken(req, res)
   if (tokenVerified) {
     res.status(200)
-    res.send()
+    res.json({
+      name: tokenVerified.name
+    })
   }
 })
 

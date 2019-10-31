@@ -13,18 +13,13 @@ import {
   USER_IS_MANAGER,
   USER_TYPE_MANAGER
 } from 'constants/AppConstants'
-import {
-  API_ERROR_404,
-  API_COMMON_ERROR,
-  LOGGED_IN_ALREADY,
-  LOGGED_IN_NOT
-} from 'constants/AppMessage'
+import { API_ERROR_404, API_COMMON_ERROR } from 'constants/AppMessage'
 
 /**
  * Common error hander for API calls
  * @param {*} error
  */
-export const errorHandler = (dispatch, error, allowMessageClose = false) => {
+export const errorHandler = (error, allowMessageClose = false) => {
   let message = ''
   let detailedMessage = []
   try {
@@ -142,10 +137,14 @@ export const setAjaxProcessing = ajaxProcessing => {
  * &
  * Set logged in as admin or not
  * @param {boolean} loggedIn
- * @param {boolean} isManager
+ * @param {*} userData
  */
-export const setLoggedIn = (loggedIn, isManager) => {
-  return { type: SET_LOGGED_IN, loggedIn, isManager }
+export const setLoggedIn = (loggedIn = false, userData = {}) => {
+  const isManager = !userData.userIsManager
+    ? isManagerType(userData.type)
+    : userData.userIsManager
+  const userName = userData.name
+  return { type: SET_LOGGED_IN, loggedIn, isManager, userName }
 }
 
 /**
@@ -153,10 +152,22 @@ export const setLoggedIn = (loggedIn, isManager) => {
  * @param  {...any} loginData
  */
 export const setUserData = ({ ...loginData }) => {
-  const { token } = loginData
+  const { token, type: userType } = loginData
 
   setLocalStorage(USER_API_KEY, token)
-  setLocalStorage(USER_IS_MANAGER, loginData.type === USER_TYPE_MANAGER)
+  const userIsManager = isManagerType(userType)
+  setLocalStorage(
+    USER_IS_MANAGER,
+    userType !== undefined ? userIsManager : null
+  )
+}
+
+/**
+ * String comparision to check user type is Manager or not
+ * @param {*} type
+ */
+const isManagerType = type => {
+  return type === USER_TYPE_MANAGER
 }
 
 /**
@@ -177,59 +188,7 @@ export const setLocalStorage = (key, value) => {
  * @param {*} key
  */
 export const getLocalStorage = key => {
-  return localStorage ? localStorage.getItem(key) : ''
-}
-
-/**
- * Check and set as logged in
- * @param {object} dispatch
- * @param {boolean} setAsLoggedIn - Whether to set the state as
- * @param {boolean} checkTokenIsAlive - Check whether user's token is alive/active
- * logged in or not
- * To prevent state update, pass it as `false`
- */
-export const checkAndSetLogin = async (dispatch, setAsLoggedIn = true) => {
-  let isLoggedIn = false
-  const userApiKey = await getLocalStorage(USER_API_KEY)
-  let userIsManager = await getLocalStorage(USER_IS_MANAGER)
-  // String to Boolean
-  userIsManager = JSON.parse(userIsManager)
-  if (userApiKey) {
-    isLoggedIn = true
-  }
-
-  if (setAsLoggedIn === true) {
-    dispatch(setLoggedIn(isLoggedIn, userIsManager))
-  }
-  return isLoggedIn
-}
-
-/**
- * Check whether user is already logged in or not
- * @param {*} dispatch
- * @param {*} fromProtectectedRoute - Whether to check already logged in status or not
- * @return boolean - True if token exists
- */
-export const checkLoggedInStatus = async (
-  dispatch,
-  fromProtectectedRoute = true
-) => {
-  const isLoggedIn = await checkAndSetLogin(
-    dispatch,
-    true,
-    fromProtectectedRoute
-  )
-  let message = ''
-  if (!fromProtectectedRoute && isLoggedIn) {
-    message = LOGGED_IN_ALREADY
-  } else if (fromProtectectedRoute && !isLoggedIn) {
-    message = LOGGED_IN_NOT
-  } else {
-    return isLoggedIn
-  }
-  errorHandler(dispatch, message, true)
-  dispatch(setAjaxProcessing(false))
-  return false
+  return Promise.resolve(localStorage ? localStorage.getItem(key) : '')
 }
 
 /**

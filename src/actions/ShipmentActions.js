@@ -1,6 +1,6 @@
 import { apiGetShipments, apiGetShipmentDetails } from 'services/shipment'
 
-import { errorHandler, setAjaxProcessing, checkLoggedInStatus } from 'actions'
+import { errorHandler, setAjaxProcessing } from 'actions'
 
 /**
  * Get shipments
@@ -10,14 +10,6 @@ export const getShipments = () => {
     try {
       dispatch(setAjaxProcessing(true))
 
-      /**
-       * Check whether user is already logged in or not
-       */
-      const statusIsLoggedIn = await checkLoggedInStatus(dispatch)
-      if (!statusIsLoggedIn) {
-        return []
-      }
-
       const response = await apiGetShipments()
 
       dispatch(setAjaxProcessing(false))
@@ -26,7 +18,7 @@ export const getShipments = () => {
 
       return shipments
     } catch (error) {
-      errorHandler(dispatch, error, true)
+      errorHandler(error, true)
       dispatch(setAjaxProcessing(false))
       return []
     }
@@ -41,14 +33,6 @@ export const getShipmentDetails = shipmentId => {
     try {
       dispatch(setAjaxProcessing(true))
 
-      /**
-       * Check whether user is already logged in or not
-       */
-      const statusIsLoggedIn = await checkLoggedInStatus(dispatch)
-      if (!statusIsLoggedIn) {
-        return []
-      }
-
       const response = await apiGetShipmentDetails(shipmentId)
 
       dispatch(setAjaxProcessing(false))
@@ -57,7 +41,7 @@ export const getShipmentDetails = shipmentId => {
 
       return shipment
     } catch (error) {
-      errorHandler(dispatch, error, true)
+      errorHandler(error, true)
       dispatch(setAjaxProcessing(false))
       return []
     }

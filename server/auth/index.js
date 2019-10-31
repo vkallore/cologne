@@ -27,8 +27,8 @@ export const findUserById = userId => {
  * Sign the JWT
  * @param {object} user object
  */
-export const signToken = ({ id, email, type }) => {
-  const token = jwt.sign({ user_id: id, email, type }, process.env.JWT_SECRET, {
+export const signToken = ({ id, name, type }) => {
+  const token = jwt.sign({ user_id: id, name, type }, process.env.JWT_SECRET, {
     expiresIn: '1h'
   })
 

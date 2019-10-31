@@ -32,7 +32,14 @@ export const findShipments = userData => {
 
   /* User shipments */
   return Promise.resolve(
-    shipments.filter(shipment => shipment.assignee === userId)
+    shipments.filter(shipment => {
+      // Persistant data! Overwrites
+      const assigneeId = (shipment.assignee && shipment.assignee.id) || ''
+      return (
+        shipment.assignee === userId ||
+        (shipment.assignee !== null && assigneeId === userId)
+      )
+    })
   )
 }
 
@@ -105,7 +112,7 @@ export const updateShipment = async (reqBody, userData, res) => {
       return Promise.resolve(true)
     }
 
-    if (shipment.assignee === userId) {
+    if (shipment.assignee === userId || shipment.assignee.id === userId) {
       shipment.status = status
       shipment.last_update = new Date()
 

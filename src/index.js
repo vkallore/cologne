@@ -12,7 +12,7 @@ import * as serviceWorker from 'serviceWorker'
 import 'react-redux-toastr/src/styles/index.scss'
 import 'bulma/css/bulma.css'
 import 'assets/css/custom.scss'
-import { checkAndSetLogin } from 'actions'
+import { checkAndSetLogin } from 'actions/AuthActions'
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 

@@ -10,6 +10,7 @@ const initialState = {
   ajaxProcessing: false,
   loggedIn: false,
   loggedInManager: false,
+  loggedUserName: '',
   apiResponse: '',
   apiResponseType: '',
   allowMessageClear: false
@@ -70,6 +71,7 @@ const setLoggedIn = (state, action) => {
   return {
     ...state,
     loggedIn: action.loggedIn,
-    loggedInManager: action.isManager
+    loggedInManager: action.isManager,
+    loggedUserName: action.userName
   }
 }

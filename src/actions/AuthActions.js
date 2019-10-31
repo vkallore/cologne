@@ -3,12 +3,13 @@ import {
   setUserData,
   resetForm,
   setAjaxProcessing,
-  checkLoggedInStatus,
-  setLoggedIn
+  setLoggedIn,
+  getLocalStorage
 } from 'actions'
+import { USER_API_KEY, USER_IS_MANAGER } from 'constants/AppConstants'
 import { FORM_LOGIN } from 'constants/AppForms'
 
-import { doLogin } from 'services/auth'
+import { doLogin, isTokenAlive } from 'services/auth'
 
 /**
  * Login form
@@ -19,14 +20,6 @@ export const login = ({ email, password }) => {
   return async dispatch => {
     dispatch(setAjaxProcessing(true))
     try {
-      /**
-       * Check whether user is already logged in or not
-       */
-      const statusIsLoggedIn = await checkLoggedInStatus(dispatch, false)
-      if (statusIsLoggedIn) {
-        return []
-      }
-
       const { data: userData } = await doLogin({ email, password })
 
       const { token } = userData
@@ -39,7 +32,7 @@ export const login = ({ email, password }) => {
       }
       return userData
     } catch (error) {
-      errorHandler(dispatch, error, true)
+      errorHandler(error, true)
       dispatch(setAjaxProcessing(false))
       return []
     }
@@ -51,7 +44,40 @@ export const login = ({ email, password }) => {
  */
 export const logout = () => {
   return dispatch => {
-    dispatch(setLoggedIn(false, false))
+    // Clear state
+    dispatch(setLoggedIn())
     setUserData()
   }
+}
+
+/**
+ * Check and set as logged in
+ * @param {object} dispatch
+ * @param {boolean} setAsLoggedIn - Whether to set the state as
+ * @param {boolean} checkTokenIsAlive - Check whether user's token is alive/active
+ * logged in or not
+ * To prevent state update, pass it as `false`
+ */
+export const checkAndSetLogin = async dispatch => {
+  let isLoggedIn = false
+  const userToken = await getLocalStorage(USER_API_KEY)
+  let userIsManager = await getLocalStorage(USER_IS_MANAGER)
+  // String to Boolean
+  userIsManager = JSON.parse(userIsManager)
+  if (userToken !== null) {
+    try {
+      /* While reload */
+      const { data: tokenData } = await isTokenAlive()
+      // Use tokenData to store the user's name
+      if (tokenData.name) {
+        isLoggedIn = true
+        dispatch(
+          setLoggedIn(isLoggedIn, { userIsManager, name: tokenData.name })
+        )
+      }
+    } catch (err) {
+      errorHandler(err, true)
+    }
+  }
+  return isLoggedIn
 }
