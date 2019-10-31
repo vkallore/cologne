@@ -111,7 +111,6 @@ export const updateShipment = async (reqBody, userData, res) => {
       throw new Error()
     }
     const shipment = shipments[shipmentIndex]
-    console.log(shipment)
     /* Manager can update any shipment */
     if (type === MANAGER) {
       shipment.status = status
@@ -135,7 +134,6 @@ export const updateShipment = async (reqBody, userData, res) => {
     ) {
       shipment.status = status
       shipment.status_update_time = status_update_time
-      console.log(shipment)
       shipments[shipmentIndex] = shipment
     } else {
       res
@@ -145,7 +143,6 @@ export const updateShipment = async (reqBody, userData, res) => {
     }
     return Promise.resolve(shipments[shipmentIndex])
   } catch (err) {
-    console.log(err)
     return Promise.resolve(false)
   }
 }
