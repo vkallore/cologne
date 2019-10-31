@@ -16,8 +16,8 @@ export const shipments = [
     id: 2,
     origin: 'Delhi',
     destination: 'Bangalore',
-    assignee: null,
-    status: WAITING,
+    assignee: 7,
+    status: ASSIGNED,
     status_update_time: null
   },
   {
@@ -40,8 +40,8 @@ export const shipments = [
     id: 5,
     origin: 'Zug',
     destination: 'Basel',
-    assignee: null,
-    status: WAITING,
+    assignee: 6,
+    status: PICKED_UP,
     status_update_time: null
   },
   {
@@ -72,8 +72,8 @@ export const shipments = [
     id: 9,
     origin: 'New York',
     destination: 'California',
-    assignee: null,
-    status: WAITING,
+    assignee: 3,
+    status: DELIVERED,
     status_update_time: null
   },
   {
