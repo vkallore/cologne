@@ -3,15 +3,22 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 
-import AssignButton from 'components/dashboard/AssignButton'
+import ShipmentActionButton from 'components/dashboard/ShipmentActionButton'
 import { SvgLoader } from 'components/common/Loaders'
 
 import { getShipments } from 'actions/ShipmentActions'
-import { TEXT_SHIPMENT, TITLE_SHIPMENT } from 'constants/AppLanguage'
+import {
+  TEXT_SHIPMENT,
+  TITLE_SHIPMENT,
+  TEXT_ASSIGN,
+  TEXT_UPDATE
+} from 'constants/AppLanguage'
 import { toLocaleString } from 'helpers'
+import { DELIVERED, ALL_STATUS_AND_COLORS } from 'constants/AppConstants'
 
-const bikerHeaderCols = ['#', 'Origin', 'Destination', 'Status', 'Time']
-const managerHeaderCols = [...bikerHeaderCols, 'Assignee']
+const commonHeaderCols = ['#', 'Origin', 'Destination', 'Status', 'Time']
+const managerHeaderCols = [...commonHeaderCols, 'Assignee']
+const bikerHeaderCols = [...commonHeaderCols, 'Action']
 
 class Shipments extends React.Component {
   constructor(props) {
@@ -52,22 +59,33 @@ class Shipments extends React.Component {
     const { shipments } = this.state
 
     return shipments.map((shipment, index) => {
+      const shipmentStatus = shipment.status
+      const statusTagClass = ALL_STATUS_AND_COLORS[shipmentStatus].className
+
       return (
         <tr key={shipment.id}>
           <td>{++index}</td>
           <td>{shipment.origin}</td>
           <td>{shipment.destination}</td>
-          <td>{shipment.status}</td>
-          <td>{toLocaleString(shipment.last_update)}</td>
+          <td>
+            <span className={`tag ${statusTagClass}`}>{shipment.status}</span>
+          </td>
+          <td>{toLocaleString(shipment.status_update_time)}</td>
           {loggedInManager ? (
             <td>
               {shipment.assignee !== null ? (
                 shipment.assignee.name
               ) : (
-                <AssignButton id={shipment.id} />
+                <ShipmentActionButton id={shipment.id} text={TEXT_ASSIGN} />
               )}
             </td>
-          ) : null}
+          ) : (
+            <td>
+              {shipment.status !== DELIVERED ? (
+                <ShipmentActionButton id={shipment.id} text={TEXT_UPDATE} />
+              ) : null}
+            </td>
+          )}
         </tr>
       )
     })

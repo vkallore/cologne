@@ -2,7 +2,7 @@ import {
   apiGetShipments,
   apiGetShipmentDetails,
   apiGetBikers,
-  apiAssignBiker
+  apiUpdateShipment
 } from 'services/shipment'
 
 import { errorHandler, setAjaxProcessing, showMessage } from 'actions'
@@ -83,7 +83,36 @@ export const assignBiker = ({ id: shipmentId, assignee }) => {
   return async dispatch => {
     try {
       dispatch(setAjaxProcessing(true))
-      const { data: response } = await apiAssignBiker(shipmentId, assignee)
+      const { data: response } = await apiUpdateShipment({
+        shipment_id: shipmentId,
+        assignee
+      })
+
+      dispatch(setAjaxProcessing(false))
+      const { message, data: shipment } = response
+      showMessage(message, '', SUCCESS)
+
+      return shipment
+    } catch (error) {
+      errorHandler(error, true)
+      dispatch(setAjaxProcessing(false))
+      return false
+    }
+  }
+}
+
+/**
+ * Update status & date
+ */
+export const updateShipment = ({ id: shipmentId, date, status }) => {
+  return async dispatch => {
+    try {
+      dispatch(setAjaxProcessing(true))
+      const { data: response } = await apiUpdateShipment({
+        shipment_id: shipmentId,
+        status_update_time: date,
+        status
+      })
 
       dispatch(setAjaxProcessing(false))
       const { message, data: shipment } = response

@@ -10,7 +10,7 @@ export const shipments = [
     destination: 'Washington',
     assignee: null,
     status: WAITING,
-    last_update: null
+    status_update_time: null
   },
   {
     id: 2,
@@ -18,7 +18,7 @@ export const shipments = [
     destination: 'Bangalore',
     assignee: null,
     status: WAITING,
-    last_update: null
+    status_update_time: null
   },
   {
     id: 3,
@@ -26,7 +26,7 @@ export const shipments = [
     destination: 'Geneva',
     assignee: null,
     status: WAITING,
-    last_update: null
+    status_update_time: null
   },
   {
     id: 4,
@@ -34,7 +34,7 @@ export const shipments = [
     destination: 'Zug',
     assignee: null,
     status: WAITING,
-    last_update: null
+    status_update_time: null
   },
   {
     id: 5,
@@ -42,7 +42,7 @@ export const shipments = [
     destination: 'Basel',
     assignee: null,
     status: WAITING,
-    last_update: null
+    status_update_time: null
   },
   {
     id: 6,
@@ -50,7 +50,7 @@ export const shipments = [
     destination: 'Paris',
     assignee: null,
     status: WAITING,
-    last_update: null
+    status_update_time: null
   },
   {
     id: 7,
@@ -58,7 +58,7 @@ export const shipments = [
     destination: 'Vienna',
     assignee: null,
     status: WAITING,
-    last_update: null
+    status_update_time: null
   },
   {
     id: 8,
@@ -66,7 +66,7 @@ export const shipments = [
     destination: 'London',
     assignee: null,
     status: WAITING,
-    last_update: null
+    status_update_time: null
   },
   {
     id: 9,
@@ -74,7 +74,7 @@ export const shipments = [
     destination: 'California',
     assignee: null,
     status: WAITING,
-    last_update: null
+    status_update_time: null
   },
   {
     id: 10,
@@ -82,7 +82,7 @@ export const shipments = [
     destination: 'Atlanta',
     assignee: null,
     status: WAITING,
-    last_update: null
+    status_update_time: null
   },
   {
     id: 11,
@@ -90,6 +90,6 @@ export const shipments = [
     destination: 'London',
     assignee: 9,
     status: WAITING,
-    last_update: null
+    status_update_time: null
   }
 ]

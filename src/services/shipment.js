@@ -30,19 +30,12 @@ export const apiGetBikers = async () => {
   return request.get(`/bikers`, requestConfig)
 }
 
-export const apiAssignBiker = async (shipmentId, assignee) => {
+export const apiUpdateShipment = async updateData => {
   const requestConfig = {
     headers: {
       [USER_API_KEY]: await getLocalStorage(USER_API_KEY)
     }
   }
 
-  return request.put(
-    `/shipments`,
-    {
-      shipment_id: shipmentId,
-      assignee
-    },
-    requestConfig
-  )
+  return request.put(`/shipments`, updateData, requestConfig)
 }

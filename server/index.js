@@ -96,7 +96,9 @@ app.put('/shipments', async (req, res) => {
       res
         .status(200)
         .json({ message: 'Shipment updated successfully', data: shipmentData })
+      return
     }
+    res.send()
   }
 })
 

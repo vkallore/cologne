@@ -17,3 +17,19 @@ export const SUCCESS = 'success'
 export const DANGER = 'danger'
 export const INFO = 'info'
 export const WARNING = 'warning'
+
+/* Status */
+export const WAITING = 'WAITING'
+export const ASSIGNED = 'ASSIGNED'
+export const PICKED_UP = 'PICKED_UP'
+export const DELIVERED = 'DELIVERED'
+export const ALL_STATUS_AND_COLORS = {
+  [WAITING]: {
+    label: WAITING,
+    className: 'is-danger'
+  },
+  [ASSIGNED]: { label: ASSIGNED, className: 'is-warning' },
+  [PICKED_UP]: { label: PICKED_UP, className: 'is-info' },
+  [DELIVERED]: { label: DELIVERED, className: 'is-success' }
+}
+export const BIKER_STATUSES = [PICKED_UP, DELIVERED]

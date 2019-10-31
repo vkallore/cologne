@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
+import DateTimePicker from 'react-datetime-picker'
 
 import {
   faPlaneDeparture,
@@ -18,18 +19,22 @@ import { SvgLoader } from 'components/common/Loaders'
 import {
   getShipmentDetails,
   getBikers,
-  assignBiker
+  assignBiker,
+  updateShipment
 } from 'actions/ShipmentActions'
 import {
   TEXT_SHIPMENT_DETAILS,
-  TITLE_SHIPMENT_DETAILS
+  TITLE_SHIPMENT_DETAILS,
+  TEXT_UPDATE
 } from 'constants/AppLanguage'
 import { TEXT_ASSIGN, TEXT_CANCEL } from 'constants/AppLanguage'
+import { WAITING, DELIVERED } from 'constants/AppConstants'
 
 import { toLocaleString } from 'helpers'
 import { API_CONTACT_SUPPORT } from 'constants/AppMessage'
 
 const Bikers = React.lazy(() => import('components/dashboard/Bikers'))
+const Statuses = React.lazy(() => import('components/dashboard/Statuses'))
 
 class ShipmentDetails extends React.Component {
   constructor(props) {
@@ -39,12 +44,17 @@ class ShipmentDetails extends React.Component {
       shipment: null,
       bikers: [],
       assignee: null,
+      statusDate: new Date(),
+      updatedStatus: null,
       noAccess: false
     }
 
     this.getShipmentData = this.getShipmentData.bind(this)
+    this.onDateChange = this.onDateChange.bind(this)
     this.updateBikerState = this.updateBikerState.bind(this)
+    this.updateStatusState = this.updateStatusState.bind(this)
     this.assignBiker = this.assignBiker.bind(this)
+    this.submitUpdateShipment = this.submitUpdateShipment.bind(this)
   }
 
   getShipmentData = async () => {
@@ -59,7 +69,7 @@ class ShipmentDetails extends React.Component {
       return
     }
 
-    if (shipmentDetails.status === 'WAITING') {
+    if (shipmentDetails.status === WAITING) {
       bikers = await getBikers()
     }
     const newState = { ...this.state, shipment: shipmentDetails, bikers }
@@ -70,6 +80,10 @@ class ShipmentDetails extends React.Component {
     this.getShipmentData()
   }
 
+  /**
+   * Update biker state
+   * @param {*} e
+   */
   updateBikerState(e) {
     const assigneeId = e.target.value
     this.setState({
@@ -77,6 +91,20 @@ class ShipmentDetails extends React.Component {
     })
   }
 
+  /**
+   * Update shipment status state
+   * @param {*} e
+   */
+  updateStatusState(e) {
+    const status = e.target.value
+    this.setState({
+      updatedStatus: status
+    })
+  }
+
+  /**
+   * Manager submit
+   */
   async assignBiker(e) {
     e.preventDefault()
 
@@ -96,16 +124,55 @@ class ShipmentDetails extends React.Component {
     }
   }
 
+  /**
+   * Biker submit
+   */
+  async submitUpdateShipment(e) {
+    e.preventDefault()
+
+    const { updateShipment, ajaxProcessing } = this.props
+
+    if (ajaxProcessing) {
+      return
+    }
+
+    const { shipment, statusDate, updatedStatus } = this.state
+    const { id } = shipment
+
+    const updatedShipment = await updateShipment({
+      id,
+      date: statusDate,
+      status: updatedStatus
+    })
+
+    if (updatedShipment !== false) {
+      this.setState({
+        shipment: updatedShipment,
+        assignee: null,
+        statusDate: new Date(),
+        updatedStatus: null
+      })
+    }
+  }
+
+  /**
+   * Show shipment update form
+   */
   shipmentForm() {
     const { shipment, bikers } = this.state
-    const { loggedInManager, ajaxProcessing } = this.props
+    const { loggedInManager } = this.props
 
     if (shipment === null || shipment === undefined || shipment.length === 0) {
       return null
     }
 
     return (
-      <form className="box" onSubmit={this.assignBiker}>
+      <form
+        className="box"
+        onSubmit={
+          loggedInManager ? this.assignBiker : this.submitUpdateShipment
+        }
+      >
         <ShipmentDetailField
           faIcon={faPlaneDeparture}
           label="Origin"
@@ -125,7 +192,7 @@ class ShipmentDetails extends React.Component {
         <ShipmentDetailField
           faIcon={faClock}
           label="Status Updated Time"
-          field={toLocaleString(shipment.last_update)}
+          field={toLocaleString(shipment.status_update_time)}
         />
 
         {loggedInManager && shipment.assignee !== null && (
@@ -145,24 +212,92 @@ class ShipmentDetails extends React.Component {
                 <Bikers bikers={bikers} onChange={this.updateBikerState} />
               }
             />
-            <div className="field is-grouped">
-              <div className="control">
-                <button className="button is-link" disabled={ajaxProcessing}>
-                  {TEXT_ASSIGN}
-                </button>
-              </div>
-              <div className="control">
-                <Link className="button is-light" to="/shipments">
-                  {TEXT_CANCEL}
-                </Link>
-              </div>
-            </div>
+            {this.formButtons()}
           </>
         )}
+
+        {this.updateBox()}
       </form>
     )
   }
 
+  /**
+   * Biker's update box
+   */
+  updateBox() {
+    const { shipment, statusDate, updatedStatus } = this.state
+    const { loggedInManager } = this.props
+
+    /* We do not need this for manager & delivered shipments */
+    if (loggedInManager || shipment.status === DELIVERED) {
+      return null
+    }
+
+    return (
+      <>
+        <div className="box">
+          <h3 className="subtitle">Update Status &amp; Time</h3>
+          <ShipmentDetailField
+            faIcon={faShippingFast}
+            label="Status"
+            className="is-fullwidth"
+            field={
+              <Statuses
+                onChange={this.updateStatusState}
+                value={updatedStatus}
+              />
+            }
+          />
+          <ShipmentDetailField
+            faIcon={faClock}
+            label="Time"
+            field={
+              <DateTimePicker
+                onChange={this.onDateChange}
+                value={statusDate}
+                maxDate={new Date()}
+              />
+            }
+          />
+        </div>
+        {this.formButtons()}
+      </>
+    )
+  }
+
+  /**
+   * Form footer buttons
+   */
+  formButtons() {
+    const { loggedInManager, ajaxProcessing } = this.props
+
+    return (
+      <div className="field is-grouped">
+        <div className="control">
+          <button className="button is-link" disabled={ajaxProcessing}>
+            {loggedInManager ? TEXT_ASSIGN : TEXT_UPDATE}
+          </button>
+        </div>
+        <div className="control">
+          <Link className="button is-light" to="/shipments">
+            {TEXT_CANCEL}
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  /**
+   * Handle date change
+   * @param {*} date
+   */
+  onDateChange(date) {
+    this.setState({ statusDate: date })
+  }
+
+  /**
+   * User has no access to the shipment
+   */
   noAccessBlock() {
     return (
       <div className="notification is-danger no-access">
@@ -209,7 +344,8 @@ export default withRouter(
     {
       getShipmentDetails,
       getBikers,
-      assignBiker
+      assignBiker,
+      updateShipment
     }
   )(ShipmentDetails)
 )

@@ -84,7 +84,12 @@ export const findShipment = async (shipmentId, userData) => {
  * @param {*} userData
  */
 export const updateShipment = async (reqBody, userData, res) => {
-  let { status, shipment_id: shipmentId, assignee } = reqBody
+  let {
+    status,
+    shipment_id: shipmentId,
+    assignee,
+    status_update_time
+  } = reqBody
   shipmentId = +shipmentId
   assignee = +assignee
   status = status === '' || status === undefined ? ASSIGNED : status
@@ -106,12 +111,12 @@ export const updateShipment = async (reqBody, userData, res) => {
       throw new Error()
     }
     const shipment = shipments[shipmentIndex]
-
+    console.log(shipment)
     /* Manager can update any shipment */
     if (type === MANAGER) {
       shipment.status = status
       shipment.assignee = assignee !== 0 ? assignee : null
-      shipment.last_update = new Date()
+      shipment.status_update_time = new Date()
 
       const userId = shipment.assignee
       const assignedUserData = await findUserById(userId)
@@ -129,8 +134,8 @@ export const updateShipment = async (reqBody, userData, res) => {
       shipment.assignee.id === userId
     ) {
       shipment.status = status
-      shipment.last_update = new Date()
-
+      shipment.status_update_time = status_update_time
+      console.log(shipment)
       shipments[shipmentIndex] = shipment
     } else {
       res
@@ -140,6 +145,7 @@ export const updateShipment = async (reqBody, userData, res) => {
     }
     return Promise.resolve(shipments[shipmentIndex])
   } catch (err) {
+    console.log(err)
     return Promise.resolve(false)
   }
 }
