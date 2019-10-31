@@ -32,7 +32,7 @@
     "eject": "react-scripts eject",
     "frontend": "react-scripts start",
     "server": "nodemon --exec babel-node server --watch server",
-    "heroku-postbuild": "npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+    "heroku-postbuild": "npm install && npm run build"
   },
   "eslintConfig": {
     "extends": "react-app"
