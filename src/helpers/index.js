@@ -19,7 +19,7 @@ export const toISOString = ({ date, time, strDateTime }) => {
  */
 export const toLocaleString = isoString => {
   if (isoString === undefined || isoString === null || isoString === '') {
-    return null
+    return 'NA'
   }
   return new Date(isoString).toLocaleString()
 }

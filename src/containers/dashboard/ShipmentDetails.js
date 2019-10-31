@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet'
 
 import { SvgLoader } from 'components/common/Loaders'
 
-import { getShipmentDetails } from 'actions/ShipmentActions'
+import { getShipmentDetails, getBikers } from 'actions/ShipmentActions'
 import {
   TEXT_SHIPMENT_DETAILS,
   TITLE_SHIPMENT_DETAILS
@@ -18,23 +18,29 @@ class ShipmentDetails extends React.Component {
     super(props)
 
     this.state = {
-      shipment: null
+      shipment: null,
+      bikers: []
     }
 
-    this.getData = this.getData.bind(this)
+    this.getShipmentData = this.getShipmentData.bind(this)
   }
 
-  getData = async () => {
+  getShipmentData = async () => {
     const { getShipmentDetails, match } = this.props
     const { id: shipmentId } = match.params
+    let { bikers } = this.state
 
     const shipmentDetails = await getShipmentDetails(shipmentId)
-    const newState = { ...this.state, shipment: shipmentDetails }
+    if (shipmentDetails.status === 'WAITING') {
+      bikers = await getBikers()
+      console.log(bikers)
+    }
+    const newState = { ...this.state, shipment: shipmentDetails, bikers }
     this.setState(newState)
   }
 
   componentDidMount() {
-    this.getData()
+    this.getShipmentData()
   }
 
   shipmentForm() {
@@ -116,7 +122,8 @@ export default withRouter(
   connect(
     mapStateToProps,
     {
-      getShipmentDetails
+      getShipmentDetails,
+      getBikers
     }
   )(ShipmentDetails)
 )

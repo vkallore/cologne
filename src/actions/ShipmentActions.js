@@ -1,4 +1,8 @@
-import { apiGetShipments, apiGetShipmentDetails } from 'services/shipment'
+import {
+  apiGetShipments,
+  apiGetShipmentDetails,
+  apiGetBikers
+} from 'services/shipment'
 
 import { errorHandler, setAjaxProcessing } from 'actions'
 
@@ -40,6 +44,28 @@ export const getShipmentDetails = shipmentId => {
       const shipment = response.data || []
 
       return shipment
+    } catch (error) {
+      errorHandler(error, true)
+      dispatch(setAjaxProcessing(false))
+      return []
+    }
+  }
+}
+
+/**
+ * Get all bikers
+ */
+export const getBikers = () => {
+  return async dispatch => {
+    try {
+      dispatch(setAjaxProcessing(true))
+      const response = await apiGetBikers()
+
+      dispatch(setAjaxProcessing(false))
+
+      const bikers = response.data || []
+
+      return bikers
     } catch (error) {
       errorHandler(error, true)
       dispatch(setAjaxProcessing(false))
