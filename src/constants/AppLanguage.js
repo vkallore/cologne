@@ -6,5 +6,7 @@ export const TEXT_LOGIN = 'Login'
 export const TITLE_LOGIN = `${TEXT_LOGIN} - ${APP_NAME}`
 export const TEXT_LOGOUT = 'Logout'
 export const TEXT_ASSIGN = 'Assign'
+export const TEXT_CANCEL = 'Cancel'
 export const TEXT_SHIPMENT_DETAILS = 'Shipment Details'
 export const TITLE_SHIPMENT_DETAILS = `${TEXT_SHIPMENT_DETAILS} - ${APP_NAME}`
+export const TEXT_SELECT_BIKER = 'Select Biker'

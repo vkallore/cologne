@@ -1,10 +1,12 @@
 import {
   apiGetShipments,
   apiGetShipmentDetails,
-  apiGetBikers
+  apiGetBikers,
+  apiAssignBiker
 } from 'services/shipment'
 
-import { errorHandler, setAjaxProcessing } from 'actions'
+import { errorHandler, setAjaxProcessing, showMessage } from 'actions'
+import { SUCCESS } from 'constants/AppConstants'
 
 /**
  * Get shipments
@@ -70,6 +72,28 @@ export const getBikers = () => {
       errorHandler(error, true)
       dispatch(setAjaxProcessing(false))
       return []
+    }
+  }
+}
+
+/**
+ * Assing biker
+ */
+export const assignBiker = ({ id: shipmentId, assignee }) => {
+  return async dispatch => {
+    try {
+      dispatch(setAjaxProcessing(true))
+      const { data: response } = await apiAssignBiker(shipmentId, assignee)
+
+      dispatch(setAjaxProcessing(false))
+      const { message, data: shipment } = response
+      showMessage(message, '', SUCCESS)
+
+      return shipment
+    } catch (error) {
+      errorHandler(error, true)
+      dispatch(setAjaxProcessing(false))
+      return false
     }
   }
 }

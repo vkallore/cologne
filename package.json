@@ -31,7 +31,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "frontend": "react-scripts start",
-    "server": "nodemon --exec babel-node server"
+    "server": "nodemon --exec babel-node server --watch server"
   },
   "eslintConfig": {
     "extends": "react-app"

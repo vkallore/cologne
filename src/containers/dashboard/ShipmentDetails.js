@@ -1,15 +1,30 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 
+import {
+  faPlaneDeparture,
+  faPlaneArrival,
+  faShippingFast,
+  faClock,
+  faMotorcycle
+} from '@fortawesome/free-solid-svg-icons'
+
+import ShipmentDetailField from 'components/dashboard/ShipmentDetailField'
+import Bikers from 'components/dashboard/Bikers'
 import { SvgLoader } from 'components/common/Loaders'
 
-import { getShipmentDetails, getBikers } from 'actions/ShipmentActions'
+import {
+  getShipmentDetails,
+  getBikers,
+  assignBiker
+} from 'actions/ShipmentActions'
 import {
   TEXT_SHIPMENT_DETAILS,
   TITLE_SHIPMENT_DETAILS
 } from 'constants/AppLanguage'
+import { TEXT_ASSIGN, TEXT_CANCEL } from 'constants/AppLanguage'
 
 import { toLocaleString } from 'helpers'
 
@@ -19,21 +34,23 @@ class ShipmentDetails extends React.Component {
 
     this.state = {
       shipment: null,
-      bikers: []
+      bikers: [],
+      assignee: null
     }
 
     this.getShipmentData = this.getShipmentData.bind(this)
+    this.updateBikerState = this.updateBikerState.bind(this)
+    this.assignBiker = this.assignBiker.bind(this)
   }
 
   getShipmentData = async () => {
-    const { getShipmentDetails, match } = this.props
+    const { getShipmentDetails, getBikers, match } = this.props
     const { id: shipmentId } = match.params
     let { bikers } = this.state
 
     const shipmentDetails = await getShipmentDetails(shipmentId)
     if (shipmentDetails.status === 'WAITING') {
       bikers = await getBikers()
-      console.log(bikers)
     }
     const newState = { ...this.state, shipment: shipmentDetails, bikers }
     this.setState(newState)
@@ -43,8 +60,29 @@ class ShipmentDetails extends React.Component {
     this.getShipmentData()
   }
 
+  updateBikerState(e) {
+    const assigneeId = e.target.value
+    this.setState({
+      assignee: assigneeId
+    })
+  }
+
+  async assignBiker(e) {
+    e.preventDefault()
+
+    const { assignBiker } = this.props
+    const { shipment, assignee } = this.state
+    const { id } = shipment
+
+    const updatedShipment = await assignBiker({ id, assignee })
+
+    if (updatedShipment !== false) {
+      this.setState({ shipment: updatedShipment, assignee: null })
+    }
+  }
+
   shipmentForm() {
-    const { shipment } = this.state
+    const { shipment, bikers } = this.state
     const { loggedInManager } = this.props
 
     if (shipment === null || shipment === undefined || shipment.length === 0) {
@@ -52,38 +90,57 @@ class ShipmentDetails extends React.Component {
     }
 
     return (
-      <form className="box">
-        <div className="field">
-          <label className="label">Origin</label>
-          <div className="control">{shipment.origin}</div>
-        </div>
-        <div className="field">
-          <label className="label">Destination</label>
-          <div className="control">{shipment.destination}</div>
-        </div>
-        <div className="field">
-          <label className="label">Status</label>
-          <div className="control">{shipment.status}</div>
-        </div>
-        <div className="field">
-          <label className="label">Status Time</label>
-          <div className="control">{toLocaleString(shipment.last_update)}</div>
-        </div>
+      <form className="box" onSubmit={this.assignBiker}>
+        <ShipmentDetailField
+          faIcon={faPlaneDeparture}
+          label="Origin"
+          field={shipment.origin}
+        />
+        <ShipmentDetailField
+          faIcon={faPlaneArrival}
+          label="Destination"
+          field={shipment.destination}
+        />
+        <ShipmentDetailField
+          faIcon={faShippingFast}
+          label="Status"
+          field={shipment.status}
+        />
+
+        <ShipmentDetailField
+          faIcon={faClock}
+          label="Status Updated Time"
+          field={toLocaleString(shipment.last_update)}
+        />
 
         {loggedInManager && shipment.assignee !== null && (
-          <div className="field">
-            <label className="label">Assignee</label>
-            <div className="control">
-              {shipment.assignee.name} ({shipment.assignee.email})
-            </div>
-          </div>
+          <ShipmentDetailField
+            faIcon={faMotorcycle}
+            label="Assignee"
+            field={`${shipment.assignee.name} (${shipment.assignee.email})`}
+          />
         )}
 
         {loggedInManager && shipment.assignee === null && (
-          <div className="field">
-            <label className="label">Assignee</label>
-            <div className="control">ASSIGN TO BIKER</div>
-          </div>
+          <>
+            <ShipmentDetailField
+              faIcon={faMotorcycle}
+              label="Assignee"
+              field={
+                <Bikers bikers={bikers} onChange={this.updateBikerState} />
+              }
+            />
+            <div className="field is-grouped">
+              <div className="control">
+                <button className="button is-link">{TEXT_ASSIGN}</button>
+              </div>
+              <div className="control">
+                <Link className="button is-light" to="/shipments">
+                  {TEXT_CANCEL}
+                </Link>
+              </div>
+            </div>
+          </>
         )}
       </form>
     )
@@ -123,7 +180,8 @@ export default withRouter(
     mapStateToProps,
     {
       getShipmentDetails,
-      getBikers
+      getBikers,
+      assignBiker
     }
   )(ShipmentDetails)
 )

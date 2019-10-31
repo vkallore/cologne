@@ -91,9 +91,11 @@ app.put('/shipments', async (req, res) => {
   const userData = verifyToken(req, res)
 
   if (userData !== false) {
-    const userShipments = await updateShipment(req.body, userData, res)
-    if (userShipments === true) {
-      res.status(200).json({ message: 'Shipment updated successfully' })
+    const shipmentData = await updateShipment(req.body, userData, res)
+    if (shipmentData !== false) {
+      res
+        .status(200)
+        .json({ message: 'Shipment updated successfully', data: shipmentData })
     }
   }
 })

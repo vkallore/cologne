@@ -1,4 +1,4 @@
-import { shipments } from './data'
+import { shipments, WAITING, ASSIGNED } from './data'
 import { MANAGER } from '../auth/users'
 import { findUserById } from '../auth/index'
 
@@ -81,11 +81,13 @@ export const findShipment = async (shipmentId, userData) => {
  * @param {*} userData
  */
 export const updateShipment = async (reqBody, userData, res) => {
-  const { status } = reqBody
-  let { shipment_id: shipmentId, assignee } = reqBody
+  let { status, shipment_id: shipmentId, assignee } = reqBody
   shipmentId = +shipmentId
   assignee = +assignee
+  status = status === '' || status === undefined ? ASSIGNED : status
+
   const { type, user_id: userId } = userData
+
   let shipmentIndex
 
   shipments.map((shipment, index) => {
@@ -108,11 +110,21 @@ export const updateShipment = async (reqBody, userData, res) => {
       shipment.assignee = assignee !== 0 ? assignee : null
       shipment.last_update = new Date()
 
-      shipments[shipmentIndex] = shipment
-      return Promise.resolve(true)
-    }
+      const userId = shipment.assignee
+      const assignedUserData = await findUserById(userId)
+      if (assignedUserData) {
+        shipment.assignee = {
+          id: assignedUserData.id,
+          name: assignedUserData.name,
+          email: assignedUserData.email
+        }
+      }
 
-    if (shipment.assignee === userId || shipment.assignee.id === userId) {
+      shipments[shipmentIndex] = shipment
+    } else if (
+      shipment.assignee === userId ||
+      shipment.assignee.id === userId
+    ) {
       shipment.status = status
       shipment.last_update = new Date()
 
@@ -123,7 +135,7 @@ export const updateShipment = async (reqBody, userData, res) => {
         .json({ message: 'You do not have access to update this shipment!' })
       throw new Error()
     }
-    return Promise.resolve(true)
+    return Promise.resolve(shipments[shipmentIndex])
   } catch (err) {
     return Promise.resolve(false)
   }
