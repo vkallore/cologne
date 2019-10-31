@@ -6,17 +6,11 @@ import { Link } from 'react-router-dom'
 const SiteNavItems = () => (
   <TopNavBar>
     <div className="navbar-end">
-      <div className="navbar-item">
-        <div className="buttons">
-          <Link
-            className="navbar-item button is-light"
-            to="/login"
-            title={TEXT_LOGIN}
-          >
-            {TEXT_LOGIN}
-          </Link>
-        </div>
-      </div>
+      <span class="navbar-item">
+        <Link className="button is-primary" to="/login" title={TEXT_LOGIN}>
+          {TEXT_LOGIN}
+        </Link>
+      </span>
     </div>
   </TopNavBar>
 )

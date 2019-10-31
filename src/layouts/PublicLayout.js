@@ -7,19 +7,27 @@ import Footer from 'components/common/Footer'
 const PublicLayout = ({ children }) => {
   return (
     <>
-      <section>
-        <SiteNavItems />
-      </section>
-      <div className="columns">
-        <div className="column">
-          <div className="section">
-            <div className="container">
-              <ErrorBoundary>{children}</ErrorBoundary>
+      <section className="hero is-fullheight">
+        <div className="hero-head">
+          <SiteNavItems />
+          <div className="hero-body">
+            <div className="container has-text-centered">
+              <div className="columns">
+                <div className="column">
+                  <div className="section">
+                    <div className="container">
+                      <ErrorBoundary>{children}</ErrorBoundary>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <Footer />
+        <div class="hero-foot">
+          <Footer />
+        </div>
+      </section>
     </>
   )
 }

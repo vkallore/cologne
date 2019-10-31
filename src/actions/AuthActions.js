@@ -79,5 +79,8 @@ export const checkAndSetLogin = async dispatch => {
       errorHandler(err, true)
     }
   }
+  if (!isLoggedIn) {
+    setUserData()
+  }
   return isLoggedIn
 }

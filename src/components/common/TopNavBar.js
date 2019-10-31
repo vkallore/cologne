@@ -19,7 +19,7 @@ const TopNavBar = ({ children }) => {
       <div className="container">
         <div className="navbar-brand">
           <Link to="/" className="navbar-item">
-            <img src={LOGO} alt={APP_NAME} />
+            <img src={LOGO} alt={APP_NAME} /> {APP_NAME}
           </Link>
           <div
             className={`navbar-burger burger ${menuClassName}`}

@@ -2,7 +2,7 @@ import React from 'react'
 import { APP_NAME } from 'constants/AppLanguage'
 
 const Footer = () => (
-  <footer className="footer">
+  <footer className="footer is-boxed">
     <div className="container">
       <div className="content has-text-centered">
         <p>
