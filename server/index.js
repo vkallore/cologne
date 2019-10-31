@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import * as dotenv from 'dotenv'
+import path from 'path'
 
 import {
   findUserByEmailAndPassword,
@@ -16,6 +17,9 @@ dotenv.config()
 
 const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
+
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, '../build')))
 
 // Allow cors, RISK!
 app.use(cors())
@@ -46,6 +50,9 @@ app.use((req, res, next) => {
 /* Accept incoming request bodies & parse it to req.body! */
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+
+// Set port to be used by Node.js
+app.set('port', process.env.PORT || process.env.SERVER_PORT)
 
 /**
  * Get shipments accessible by the user
@@ -154,14 +161,14 @@ app.get('/bikers', async (req, res) => {
   }
 })
 
-/* Throw 404 for all other requests */
+// Handle React routing, return all requests to React app
 app.get('*', (req, res) => {
-  res.status(404)
-  res.json({ message: 'I do not know what you are looking for!' })
+  res.setHeader('Content-Type', 'text/html')
+  res.status(200)
+
+  res.sendFile(path.join(__dirname + '/../build/index.html'))
 })
 
-app.listen(process.env.SERVER_PORT, () =>
-  console.log(
-    `Express server is running on localhost: ${process.env.SERVER_PORT}`
-  )
+app.listen(app.get('port'), () =>
+  console.log(`Express server is running on localhost: ${app.get('port')}`)
 )
