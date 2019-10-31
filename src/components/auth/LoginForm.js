@@ -32,7 +32,7 @@ const LoginForm = props => {
         <label>{FIELD_EMAIL}:</label>
         <p className="control has-icons-left">
           <Input
-            type="text"
+            type="email"
             name="email"
             placeholder={FIELD_EMAIL}
             formModel={formModel}

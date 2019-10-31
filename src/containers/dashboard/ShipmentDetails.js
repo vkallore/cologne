@@ -274,7 +274,11 @@ class ShipmentDetails extends React.Component {
     return (
       <div className="field is-grouped">
         <div className="control">
-          <button className="button is-link" disabled={ajaxProcessing}>
+          <button
+            type="submit"
+            className="button is-link"
+            disabled={ajaxProcessing}
+          >
             {loggedInManager ? TEXT_ASSIGN : TEXT_UPDATE}
           </button>
         </div>

@@ -60,7 +60,9 @@ class Shipments extends React.Component {
 
     return shipments.map((shipment, index) => {
       const shipmentStatus = shipment.status
-      const statusTagClass = ALL_STATUS_AND_COLORS[shipmentStatus].className
+      const statusTagClass = shipmentStatus
+        ? ALL_STATUS_AND_COLORS[shipmentStatus].className
+        : ''
 
       return (
         <tr key={shipment.id}>

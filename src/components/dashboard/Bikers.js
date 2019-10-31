@@ -6,7 +6,7 @@ const Bikers = props => {
   return (
     <>
       <div className="select">
-        <select required onChange={props.onChange}>
+        <select required={true} onChange={props.onChange}>
           <option>{TEXT_SELECT_BIKER}</option>
           {props.bikers.map(biker => (
             <option key={biker.id} value={biker.id}>
