@@ -20,10 +20,11 @@ REACT_APP_API_URL=API_URL
 ## Run the app
 
 ```bash
-yarn start
-# OR
-npm start
+npm run server
+npm run frontend
 ```
+
+Both are running seperately on local.
 
 Runs the app in the development mode.
 

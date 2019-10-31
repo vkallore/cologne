@@ -57,7 +57,7 @@ app.set('port', process.env.PORT || process.env.SERVER_PORT)
 /**
  * Get shipments accessible by the user
  */
-app.get('/shipments', async (req, res) => {
+app.get('/api/shipments', async (req, res) => {
   // Find user from token
   const userData = verifyToken(req, res)
 
@@ -72,7 +72,7 @@ app.get('/shipments', async (req, res) => {
 /**
  * Get shipments accessible by the user
  */
-app.get('/shipments/:id', async (req, res) => {
+app.get('/api/shipments/:id', async (req, res) => {
   // Find user from token
   const userData = verifyToken(req, res)
 
@@ -93,7 +93,7 @@ app.get('/shipments/:id', async (req, res) => {
 /**
  * Update a shipment status
  */
-app.put('/shipments', async (req, res) => {
+app.put('/api/shipments', async (req, res) => {
   // Find user from token
   const userData = verifyToken(req, res)
 
@@ -112,7 +112,7 @@ app.put('/shipments', async (req, res) => {
 /**
  * Login request
  */
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
   const { email, password } = req.body
 
   const user = await findUserByEmailAndPassword(email, password)
@@ -132,7 +132,7 @@ app.post('/login', async (req, res) => {
 /**
  * Verify user token
  */
-app.post('/token-verify', (req, res) => {
+app.post('/api/token-verify', (req, res) => {
   const tokenVerified = verifyToken(req, res)
   if (tokenVerified) {
     res.status(200)
@@ -145,7 +145,7 @@ app.post('/token-verify', (req, res) => {
 /**
  * Get all bikers
  */
-app.get('/bikers', async (req, res) => {
+app.get('/api/bikers', async (req, res) => {
   // Find user from token
   const userData = verifyToken(req, res)
 
