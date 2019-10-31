@@ -12,7 +12,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 import ShipmentDetailField from 'components/dashboard/ShipmentDetailField'
-import Bikers from 'components/dashboard/Bikers'
+
 import { SvgLoader } from 'components/common/Loaders'
 
 import {
@@ -27,6 +27,9 @@ import {
 import { TEXT_ASSIGN, TEXT_CANCEL } from 'constants/AppLanguage'
 
 import { toLocaleString } from 'helpers'
+import { API_CONTACT_SUPPORT } from 'constants/AppMessage'
+
+const Bikers = React.lazy(() => import('components/dashboard/Bikers'))
 
 class ShipmentDetails extends React.Component {
   constructor(props) {
@@ -35,7 +38,8 @@ class ShipmentDetails extends React.Component {
     this.state = {
       shipment: null,
       bikers: [],
-      assignee: null
+      assignee: null,
+      noAccess: false
     }
 
     this.getShipmentData = this.getShipmentData.bind(this)
@@ -49,6 +53,12 @@ class ShipmentDetails extends React.Component {
     let { bikers } = this.state
 
     const shipmentDetails = await getShipmentDetails(shipmentId)
+
+    if (shipmentDetails === null) {
+      this.setState({ noAccess: true })
+      return
+    }
+
     if (shipmentDetails.status === 'WAITING') {
       bikers = await getBikers()
     }
@@ -70,7 +80,12 @@ class ShipmentDetails extends React.Component {
   async assignBiker(e) {
     e.preventDefault()
 
-    const { assignBiker } = this.props
+    const { assignBiker, ajaxProcessing } = this.props
+
+    if (ajaxProcessing) {
+      return
+    }
+
     const { shipment, assignee } = this.state
     const { id } = shipment
 
@@ -83,7 +98,7 @@ class ShipmentDetails extends React.Component {
 
   shipmentForm() {
     const { shipment, bikers } = this.state
-    const { loggedInManager } = this.props
+    const { loggedInManager, ajaxProcessing } = this.props
 
     if (shipment === null || shipment === undefined || shipment.length === 0) {
       return null
@@ -132,7 +147,9 @@ class ShipmentDetails extends React.Component {
             />
             <div className="field is-grouped">
               <div className="control">
-                <button className="button is-link">{TEXT_ASSIGN}</button>
+                <button className="button is-link" disabled={ajaxProcessing}>
+                  {TEXT_ASSIGN}
+                </button>
               </div>
               <div className="control">
                 <Link className="button is-light" to="/shipments">
@@ -146,8 +163,19 @@ class ShipmentDetails extends React.Component {
     )
   }
 
+  noAccessBlock() {
+    return (
+      <div className="notification is-danger no-access">
+        Sorry, you do not have access to this shipment!
+        <br />
+        {API_CONTACT_SUPPORT}
+      </div>
+    )
+  }
+
   render() {
     const { ajaxProcessing } = this.props
+    const { noAccess } = this.state
 
     return (
       <>
@@ -158,7 +186,7 @@ class ShipmentDetails extends React.Component {
         <div className="container">
           <div className="columns">
             <div className="column is-half is-offset-one-quarter">
-              {this.shipmentForm()}
+              {!noAccess ? this.shipmentForm() : this.noAccessBlock()}
             </div>
           </div>
 

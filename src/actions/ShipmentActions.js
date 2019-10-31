@@ -49,7 +49,7 @@ export const getShipmentDetails = shipmentId => {
     } catch (error) {
       errorHandler(error, true)
       dispatch(setAjaxProcessing(false))
-      return []
+      return null
     }
   }
 }

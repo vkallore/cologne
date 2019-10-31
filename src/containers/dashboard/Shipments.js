@@ -86,7 +86,7 @@ class Shipments extends React.Component {
           <div className="columns">
             <div className="column">
               <div className="table-container">
-                <table className="table is-fullwidth">
+                <table className="table is-fullwidth is-bordered is-hoverable">
                   <thead>
                     <tr>{this.headerCols()}</tr>
                   </thead>

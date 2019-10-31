@@ -24,7 +24,7 @@ const PublicLayout = ({ children }) => {
             </div>
           </div>
         </div>
-        <div class="hero-foot">
+        <div className="hero-foot">
           <Footer />
         </div>
       </section>

@@ -13,19 +13,28 @@ const ProtectedLayout = ({ children }) => {
       <Helmet>
         <title>{TITLE_SHIPMENT}</title>
       </Helmet>
+      <section className="hero is-fullheight">
+        <div className="hero-head">
+          <DashboardNavItems />
 
-      <DashboardNavItems />
-
-      <div className="container">
-        <div className="columns">
-          <div className="column">
-            <div className="section">
-              <ErrorBoundary>{children}</ErrorBoundary>
+          <div className="hero-body">
+            <div className="container">
+              <div className="columns">
+                <div className="column">
+                  <div className="section">
+                    <div className="container">
+                      <ErrorBoundary>{children}</ErrorBoundary>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <Footer />
+        <div className="hero-foot">
+          <Footer />
+        </div>
+      </section>
     </>
   )
 }

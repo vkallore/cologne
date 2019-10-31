@@ -27,7 +27,7 @@ const LoginForm = props => {
   }
 
   return (
-    <form onSubmit={submitForm}>
+    <form onSubmit={submitForm} className="has-text-left">
       <div className="field">
         <label>{FIELD_EMAIL}:</label>
         <p className="control has-icons-left">

@@ -72,7 +72,7 @@ $md-width: 768px;
 .section {
   .container {
     h1.title {
-      margin-top: 1em;
+      margin-bottom: 2em;
     }
   }
 }
@@ -81,5 +81,11 @@ $md-width: 768px;
   &:hover {
     background-color: #dbdbdb;
     transition-duration: 0.5s;
+  }
+}
+
+.notification {
+  &.no-access {
+    padding: 4em 2em;
   }
 }

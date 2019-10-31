@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 const SiteNavItems = () => (
   <TopNavBar>
     <div className="navbar-end">
-      <span class="navbar-item">
+      <span className="navbar-item">
         <Link className="button is-primary" to="/login" title={TEXT_LOGIN}>
           {TEXT_LOGIN}
         </Link>

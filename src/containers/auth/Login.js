@@ -12,8 +12,6 @@ import { TITLE_LOGIN, TEXT_LOGIN } from 'constants/AppLanguage'
 
 import { getLoginRedirect } from 'helpers'
 
-// const AlertBox = React.lazy(() => import('components/common/AlertBox'))
-
 class Login extends React.Component {
   handleSubmit = async formFields => {
     const { login } = this.props
