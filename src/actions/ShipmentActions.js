@@ -99,6 +99,7 @@ export const assignBiker = ({ id: shipmentId, assignee }) => {
         shipment_id: shipmentId,
         assignee
       })
+
       const { message, data } = response
       await dispatch({
         type: SHIPMENT_DETAILS,
@@ -130,11 +131,16 @@ export const updateShipment = ({ id: shipmentId, date, status }) => {
         status
       })
 
+      const { message, data } = response
+      await dispatch({
+        type: SHIPMENT_DETAILS,
+        data: data
+      })
+
       dispatch(setAjaxProcessing(false))
-      const { message, data: shipment } = response
       showMessage(message, '', SUCCESS)
 
-      return shipment
+      return true
     } catch (error) {
       errorHandler(error, true)
       dispatch(setAjaxProcessing(false))
