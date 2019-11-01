@@ -41,8 +41,6 @@ class ShipmentDetails extends React.Component {
     super(props)
 
     this.state = {
-      shipment: null,
-      bikers: [],
       assignee: null,
       statusDate: new Date(),
       updatedStatus: null,
@@ -60,7 +58,6 @@ class ShipmentDetails extends React.Component {
   getShipmentData = async () => {
     const { getShipmentDetails, getBikers, match } = this.props
     const { id: shipmentId } = match.params
-    let { bikers } = this.state
 
     const shipmentDetails = await getShipmentDetails(shipmentId)
 
@@ -70,10 +67,8 @@ class ShipmentDetails extends React.Component {
     }
 
     if (shipmentDetails.status === WAITING) {
-      bikers = await getBikers()
+      await getBikers()
     }
-    const newState = { ...this.state, shipment: shipmentDetails, bikers }
-    this.setState(newState)
   }
 
   componentDidMount() {
@@ -108,19 +103,19 @@ class ShipmentDetails extends React.Component {
   async assignBiker(e) {
     e.preventDefault()
 
-    const { assignBiker, ajaxProcessing } = this.props
+    const { assignBiker, ajaxProcessing, shipment } = this.props
 
     if (ajaxProcessing) {
       return
     }
 
-    const { shipment, assignee } = this.state
+    const { assignee } = this.state
     const { id } = shipment
 
     const updatedShipment = await assignBiker({ id, assignee })
 
     if (updatedShipment !== false) {
-      this.setState({ shipment: updatedShipment, assignee: null })
+      this.setState({ assignee: null })
     }
   }
 
@@ -130,13 +125,13 @@ class ShipmentDetails extends React.Component {
   async submitUpdateShipment(e) {
     e.preventDefault()
 
-    const { updateShipment, ajaxProcessing } = this.props
+    const { updateShipment, ajaxProcessing, shipment } = this.props
 
     if (ajaxProcessing) {
       return
     }
 
-    const { shipment, statusDate, updatedStatus } = this.state
+    const { statusDate, updatedStatus } = this.state
     const { id } = shipment
 
     const updatedShipment = await updateShipment({
@@ -147,7 +142,6 @@ class ShipmentDetails extends React.Component {
 
     if (updatedShipment !== false) {
       this.setState({
-        shipment: updatedShipment,
         assignee: null,
         statusDate: new Date(),
         updatedStatus: null
@@ -159,8 +153,7 @@ class ShipmentDetails extends React.Component {
    * Show shipment update form
    */
   shipmentForm() {
-    const { shipment, bikers } = this.state
-    const { loggedInManager } = this.props
+    const { shipment, bikers, loggedInManager } = this.props
 
     if (shipment === null || shipment === undefined || shipment.length === 0) {
       return null
@@ -225,8 +218,8 @@ class ShipmentDetails extends React.Component {
    * Biker's update box
    */
   updateBox() {
-    const { shipment, statusDate, updatedStatus } = this.state
-    const { loggedInManager } = this.props
+    const { statusDate, updatedStatus } = this.state
+    const { shipment, loggedInManager } = this.props
 
     /* We do not need this for manager & delivered shipments */
     if (loggedInManager || shipment.status === DELIVERED) {
@@ -339,7 +332,9 @@ class ShipmentDetails extends React.Component {
 const mapStateToProps = state => ({
   loggedIn: state.common.loggedIn,
   loggedInManager: state.common.loggedInManager,
-  ajaxProcessing: state.common.ajaxProcessing
+  ajaxProcessing: state.common.ajaxProcessing,
+  shipment: state.shipment.shipmentDetails,
+  bikers: state.shipment.bikers
 })
 
 export default withRouter(
