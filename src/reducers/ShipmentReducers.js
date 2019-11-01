@@ -15,7 +15,6 @@ export const shipmentReducer = (state = initialState, action) => {
       }
 
     case SHIPMENT_DETAILS:
-      console.log(action.data)
       return {
         ...state,
         shipmentDetails: action.data
