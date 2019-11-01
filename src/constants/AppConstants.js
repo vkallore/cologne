@@ -8,6 +8,9 @@ export const CHANGE_FORM = 'CHANGE_FORM'
 export const SET_LOGGED_IN = 'SET_LOGGED_IN'
 export const USER_TYPE_MANAGER = 'MANAGER'
 export const USER_IS_MANAGER = 'USER_IS_MANAGER'
+export const SHIPMENT_DATA = 'SHIPMENT_DATA'
+export const SHIPMENT_DETAILS = 'SHIPMENT_DETAILS'
+export const BIKERS = 'BIKERS'
 
 /* Header/Localstorage */
 export const USER_API_KEY = 'token'

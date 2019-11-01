@@ -59,7 +59,8 @@ export const findShipment = async (shipmentId, userData) => {
     return Promise.resolve(null)
   }
   // Persistant data! Overwrites
-  const assigneeId = (shipment.assignee && shipment.assignee.id) || ''
+  const assigneeId =
+    shipment.assignee || (shipment.assignee && shipment.assignee.id)
 
   /* Manager should get assignee details */
   if (type === MANAGER) {

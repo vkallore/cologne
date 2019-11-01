@@ -6,7 +6,12 @@ import {
 } from 'services/shipment'
 
 import { errorHandler, setAjaxProcessing, showMessage } from 'actions'
-import { SUCCESS } from 'constants/AppConstants'
+import {
+  SUCCESS,
+  SHIPMENT_DATA,
+  SHIPMENT_DETAILS,
+  BIKERS
+} from 'constants/AppConstants'
 
 /**
  * Get shipments
@@ -16,13 +21,15 @@ export const getShipments = () => {
     try {
       dispatch(setAjaxProcessing(true))
 
-      const response = await apiGetShipments()
+      const { data: response } = await apiGetShipments()
+
+      await dispatch({
+        type: SHIPMENT_DATA,
+        data: response
+      })
 
       dispatch(setAjaxProcessing(false))
-
-      const shipments = response.data || []
-
-      return shipments
+      return true
     } catch (error) {
       errorHandler(error, true)
       dispatch(setAjaxProcessing(false))
@@ -39,13 +46,15 @@ export const getShipmentDetails = shipmentId => {
     try {
       dispatch(setAjaxProcessing(true))
 
-      const response = await apiGetShipmentDetails(shipmentId)
+      const { data: response } = await apiGetShipmentDetails(shipmentId)
 
+      await dispatch({
+        type: SHIPMENT_DETAILS,
+        data: response
+      })
       dispatch(setAjaxProcessing(false))
 
-      const shipment = response.data || []
-
-      return shipment
+      return response
     } catch (error) {
       errorHandler(error, true)
       dispatch(setAjaxProcessing(false))
@@ -61,13 +70,16 @@ export const getBikers = () => {
   return async dispatch => {
     try {
       dispatch(setAjaxProcessing(true))
-      const response = await apiGetBikers()
+      const { data: response } = await apiGetBikers()
+
+      await dispatch({
+        type: BIKERS,
+        data: response
+      })
 
       dispatch(setAjaxProcessing(false))
 
-      const bikers = response.data || []
-
-      return bikers
+      return true
     } catch (error) {
       errorHandler(error, true)
       dispatch(setAjaxProcessing(false))
@@ -88,11 +100,16 @@ export const assignBiker = ({ id: shipmentId, assignee }) => {
         assignee
       })
 
+      const { message, data } = response
+      await dispatch({
+        type: SHIPMENT_DETAILS,
+        data: data
+      })
+
       dispatch(setAjaxProcessing(false))
-      const { message, data: shipment } = response
       showMessage(message, '', SUCCESS)
 
-      return shipment
+      return true
     } catch (error) {
       errorHandler(error, true)
       dispatch(setAjaxProcessing(false))
@@ -114,11 +131,16 @@ export const updateShipment = ({ id: shipmentId, date, status }) => {
         status
       })
 
+      const { message, data } = response
+      await dispatch({
+        type: SHIPMENT_DETAILS,
+        data: data
+      })
+
       dispatch(setAjaxProcessing(false))
-      const { message, data: shipment } = response
       showMessage(message, '', SUCCESS)
 
-      return shipment
+      return true
     } catch (error) {
       errorHandler(error, true)
       dispatch(setAjaxProcessing(false))
