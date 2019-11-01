@@ -162,7 +162,7 @@ app.get('/api/bikers', async (req, res) => {
 })
 
 // Handle React routing, return all requests to React app
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
     res.setHeader('Content-Type', 'text/html')
     res.status(200)
