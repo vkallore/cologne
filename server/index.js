@@ -162,12 +162,14 @@ app.get('/api/bikers', async (req, res) => {
 })
 
 // Handle React routing, return all requests to React app
-app.get('*', (req, res) => {
-  res.setHeader('Content-Type', 'text/html')
-  res.status(200)
+if (process.env.NODE_ENV !== 'production') {
+  app.get('*', (req, res) => {
+    res.setHeader('Content-Type', 'text/html')
+    res.status(200)
 
-  res.sendFile(path.join(__dirname + '/../build/index.html'))
-})
+    res.sendFile(path.join(__dirname + '/../build/index.html'))
+  })
+}
 
 app.listen(app.get('port'), () =>
   console.log(`Express server is running on localhost: ${app.get('port')}`)
