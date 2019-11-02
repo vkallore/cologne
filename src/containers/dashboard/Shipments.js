@@ -28,6 +28,8 @@ class Shipments extends React.Component {
       shipmentHeaderCols: []
     }
 
+    this.headerCols = []
+
     this.getData = this.getData.bind(this)
   }
 
@@ -35,19 +37,17 @@ class Shipments extends React.Component {
     const { getShipments } = this.props
 
     await getShipments()
-    // const newState = { ...this.state, shipments: shipmentDetails }
-    // this.setState(newState)
   }
 
   componentDidMount() {
     this.getData()
   }
 
-  headerCols() {
+  drawHeaderCols() {
     const { loggedInManager } = this.props
-    const headerCols = loggedInManager ? managerHeaderCols : bikerHeaderCols
+    this.headerCols = loggedInManager ? managerHeaderCols : bikerHeaderCols
 
-    return headerCols.map((col, key) => {
+    return this.headerCols.map((col, key) => {
       return <th key={key}>{col}</th>
     })
   }
@@ -66,17 +66,26 @@ class Shipments extends React.Component {
           ? ALL_STATUS_AND_COLORS[shipmentStatus].className
           : ''
 
+        /* Column index to add label programatically */
+        let columnIndex = 0
+
         return (
           <tr key={shipment.id}>
-            <td>{++index}</td>
-            <td>{shipment.origin}</td>
-            <td>{shipment.destination}</td>
-            <td>
+            <td data-label={this.headerCols[columnIndex++]}>{++index}</td>
+            <td data-label={this.headerCols[columnIndex++]}>
+              {shipment.origin}
+            </td>
+            <td data-label={this.headerCols[columnIndex++]}>
+              {shipment.destination}
+            </td>
+            <td data-label={this.headerCols[columnIndex++]}>
               <span className={`tag ${statusTagClass}`}>{shipment.status}</span>
             </td>
-            <td>{toLocaleString(shipment.status_update_time)}</td>
+            <td data-label={this.headerCols[columnIndex++]}>
+              {toLocaleString(shipment.status_update_time)}
+            </td>
             {loggedInManager ? (
-              <td>
+              <td data-label={this.headerCols[columnIndex++]}>
                 {shipment.assignee !== null ? (
                   shipment.assignee.name
                 ) : (
@@ -84,7 +93,7 @@ class Shipments extends React.Component {
                 )}
               </td>
             ) : (
-              <td>
+              <td data-label={this.headerCols[columnIndex++]}>
                 {shipment.status !== DELIVERED ? (
                   <ShipmentActionButton id={shipment.id} text={TEXT_UPDATE} />
                 ) : null}
@@ -125,9 +134,9 @@ class Shipments extends React.Component {
           <div className="columns">
             <div className="column">
               <div className="table-container">
-                <table className="table is-fullwidth is-bordered is-hoverable">
+                <table className="table is-fullwidth is-bordered responsive">
                   <thead>
-                    <tr>{this.headerCols()}</tr>
+                    <tr>{this.drawHeaderCols()}</tr>
                   </thead>
                   <tbody>{this.shipmentTableData()}</tbody>
                 </table>
