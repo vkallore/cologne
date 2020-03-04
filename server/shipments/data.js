@@ -89,7 +89,7 @@ export const shipments = [
     origin: 'Torronto',
     destination: 'London',
     assignee: 9,
-    status: WAITING,
+    status: ASSIGNED,
     status_update_time: null
   }
 ]

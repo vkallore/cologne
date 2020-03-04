@@ -1,5 +1,10 @@
 $md-width: 768px;
 
+.navbar {
+  box-shadow: 0 2px 0 0 #f5f5f5;
+  background-color: #fff !important;
+}
+
 .footer {
   background-color: transparent;
 }
@@ -38,11 +43,46 @@ $md-width: 768px;
 
 /* Table */
 /* Responsive */
-.table__wrapper {
-  overflow-x: auto;
-}
-.responsive-table {
-  width: 100%;
+@media screen and (max-width: $md-width) {
+  table.responsive {
+    border: 0;
+
+    thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+
+    tr {
+      display: block;
+      margin-bottom: 0.825em;
+      box-shadow: 5px 5px 10px #ccc;
+    }
+
+    td {
+      display: block;
+      font-size: 0.8em;
+      text-align: right;
+      &::before {
+        /*
+        aria-label has no advantage, it won't be read inside a table
+        content: attr(aria-label);
+        */
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+      }
+
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
 }
 /* EO Responsive */
 .has-text-centered > th,
@@ -76,7 +116,12 @@ $md-width: 768px;
     }
   }
 }
-
+@media screen and (max-width: $md-width) {
+  .hero-body,
+  .section {
+    padding: 3em 0.5em;
+  }
+}
 .btn-assign {
   &:hover {
     background-color: #dbdbdb;

@@ -25,9 +25,10 @@ class Shipments extends React.Component {
     super(props)
 
     this.state = {
-      shipments: [],
       shipmentHeaderCols: []
     }
+
+    this.headerCols = []
 
     this.getData = this.getData.bind(this)
   }
@@ -35,62 +36,89 @@ class Shipments extends React.Component {
   getData = async () => {
     const { getShipments } = this.props
 
-    const shipmentDetails = await getShipments()
-    const newState = { ...this.state, shipments: shipmentDetails }
-    this.setState(newState)
+    await getShipments()
   }
 
   componentDidMount() {
     this.getData()
   }
 
-  headerCols() {
+  drawHeaderCols() {
     const { loggedInManager } = this.props
-    const headerCols = loggedInManager ? managerHeaderCols : bikerHeaderCols
+    this.headerCols = loggedInManager ? managerHeaderCols : bikerHeaderCols
 
-    return headerCols.map((col, key) => {
+    return this.headerCols.map((col, key) => {
       return <th key={key}>{col}</th>
     })
   }
 
   shipmentTableData() {
-    const { loggedInManager } = this.props
+    const { loggedInManager, ajaxProcessing, shipments } = this.props
 
-    const { shipments } = this.state
+    if (ajaxProcessing === true) {
+      return null
+    }
 
-    return shipments.map((shipment, index) => {
-      const shipmentStatus = shipment.status
-      const statusTagClass = shipmentStatus
-        ? ALL_STATUS_AND_COLORS[shipmentStatus].className
-        : ''
+    if (shipments.length > 0) {
+      return shipments.map((shipment, index) => {
+        const shipmentStatus = shipment.status
+        const statusTagClass = shipmentStatus
+          ? ALL_STATUS_AND_COLORS[shipmentStatus].className
+          : ''
 
+        /* Column index to add label programatically */
+        let columnIndex = 0
+
+        return (
+          <tr key={shipment.id}>
+            <td data-label={this.headerCols[columnIndex++]}>{++index}</td>
+            <td data-label={this.headerCols[columnIndex++]}>
+              {shipment.origin}
+            </td>
+            <td data-label={this.headerCols[columnIndex++]}>
+              {shipment.destination}
+            </td>
+            <td data-label={this.headerCols[columnIndex++]}>
+              <span className={`tag ${statusTagClass}`}>{shipment.status}</span>
+            </td>
+            <td data-label={this.headerCols[columnIndex++]}>
+              {toLocaleString(shipment.status_update_time)}
+            </td>
+            {loggedInManager ? (
+              <td data-label={this.headerCols[columnIndex++]}>
+                {shipment.assignee !== null ? (
+                  shipment.assignee.name
+                ) : (
+                  <ShipmentActionButton id={shipment.id} text={TEXT_ASSIGN} />
+                )}
+              </td>
+            ) : (
+              <td data-label={this.headerCols[columnIndex++]}>
+                {shipment.status !== DELIVERED ? (
+                  <ShipmentActionButton id={shipment.id} text={TEXT_UPDATE} />
+                ) : null}
+              </td>
+            )}
+          </tr>
+        )
+      })
+    } else {
       return (
-        <tr key={shipment.id}>
-          <td>{++index}</td>
-          <td>{shipment.origin}</td>
-          <td>{shipment.destination}</td>
-          <td>
-            <span className={`tag ${statusTagClass}`}>{shipment.status}</span>
+        <tr>
+          <td
+            colSpan={
+              loggedInManager
+                ? managerHeaderCols.length
+                : bikerHeaderCols.length
+            }
+          >
+            <div className="notification is-danger has-text-centered">
+              No shipment found
+            </div>
           </td>
-          <td>{toLocaleString(shipment.status_update_time)}</td>
-          {loggedInManager ? (
-            <td>
-              {shipment.assignee !== null ? (
-                shipment.assignee.name
-              ) : (
-                <ShipmentActionButton id={shipment.id} text={TEXT_ASSIGN} />
-              )}
-            </td>
-          ) : (
-            <td>
-              {shipment.status !== DELIVERED ? (
-                <ShipmentActionButton id={shipment.id} text={TEXT_UPDATE} />
-              ) : null}
-            </td>
-          )}
         </tr>
       )
-    })
+    }
   }
 
   render() {
@@ -106,9 +134,9 @@ class Shipments extends React.Component {
           <div className="columns">
             <div className="column">
               <div className="table-container">
-                <table className="table is-fullwidth is-bordered is-hoverable">
+                <table className="table is-fullwidth is-bordered responsive">
                   <thead>
-                    <tr>{this.headerCols()}</tr>
+                    <tr>{this.drawHeaderCols()}</tr>
                   </thead>
                   <tbody>{this.shipmentTableData()}</tbody>
                 </table>
@@ -126,7 +154,8 @@ class Shipments extends React.Component {
 const mapStateToProps = state => ({
   loggedIn: state.common.loggedIn,
   loggedInManager: state.common.loggedInManager,
-  ajaxProcessing: state.common.ajaxProcessing
+  ajaxProcessing: state.common.ajaxProcessing,
+  shipments: state.shipment.shipments
 })
 
 export default withRouter(
